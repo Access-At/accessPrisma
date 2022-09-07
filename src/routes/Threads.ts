@@ -1,5 +1,5 @@
 import e, { Router } from 'express'
-import prisma from '../../client'
+import prisma from '../../prisma'
 import bcrypt from 'bcrypt'
 
 const route = Router()

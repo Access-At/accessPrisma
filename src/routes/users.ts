@@ -1,65 +1,18 @@
 import { Router } from 'express'
-import prisma from '../../client'
+import prisma from '../../prisma'
 import bcrypt from 'bcrypt'
+const  { 
+  getSignIn, getSignUp, getUsersAll
+} = require('../../controller/user/AuthController')
 
 const route = Router()
 
-route.get('/users', async (req, res, next) => {
-  try {
-    const users = await prisma.user.findMany()
-    return res.json(users)
-  } catch (error) {
-    next(error)
-  }
-})
+route.get('/users/get',getUsersAll)
 
-// Register
-route.post('/users', async (req, res, next) => {
-  try {
-    const hash = await bcrypt.hash(req.body.password, 10)
-    const { username, email } = req.body
-    const users = await prisma.user.create({
-      data: {
-        username,
-        email,
-        password: hash,
-      },
-    })
-    return res.json(users)
-  } catch (error) {
-    next(error)
-  }
-})
+route.post('/users/sign-up', getSignUp)
 
-// Login
-route.post('/user', async (req, res, next) => {
-  try {
-    const { username, password } = req.body
-    const user = await prisma.user.findUnique({ where: { username } })
-    const userToken = await prisma.user.findFirst({ where: { username } })
-    const compare = bcrypt.compareSync(password, user?.password || '')
-    if (!compare) {
-      return res.status(400).json({
-        status: false,
-        message: 'Password invalid',
-      })
-    }
-    const token = await prisma.session.create({
-      data: {
-        userId: userToken?.id || '',
-      },
-      select: {
-        token: true,
-        userId: true,
-      },
-    })
-    return res.status(200).json(token)
-  } catch (error) {
-    next(error)
-  }
-})
+route.post('/users/sign-in', getSignIn)
 
-// Update
 route.put('/user/:id', async (req, res, next) => {
   try {
     const hash = await bcrypt.hash(req.body.password, 10)
