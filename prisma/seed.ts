@@ -1,5 +1,5 @@
 // import { PrismaClient } from "@prisma/client";
-import client from "../client";
+import client from "../prisma";
 import { faker } from "@faker-js/faker";
 
 async function main() {
