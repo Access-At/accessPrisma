@@ -1,29 +1,13 @@
 import prisma from '../../prisma'
 import bcrypt from 'bcrypt'
-import { json } from '../../helper/response'
+import { json } from '../../helper/Response'
 
-const getUsersAll = (async(res:any,next:any) => {
-  try {
-    const users = await prisma.user.findMany()
-    return res.json({
-      users
-    })
-  } catch (error) {
-    next(error)
-  }
-})
-const getSignIn = (async (req:any, res:any, next:any) => {
+export const getSignIn = async (req: any, res: any, next: any) => {
   try {
     const { username, password } = req.body
     const user = await prisma.user.findUnique({ where: { username } })
     const userToken = await prisma.user.findFirst({ where: { username } })
     const compare = bcrypt.compareSync(password, user?.password || '')
-    if (!user) {
-      return res.status(422).json({
-        status: false,
-        message: 'Username invalid',
-      })
-    }
     if (!compare) {
       return res.status(400).json({
         status: false,
@@ -39,12 +23,12 @@ const getSignIn = (async (req:any, res:any, next:any) => {
         userId: true,
       },
     })
-    json(res,200, token)
+    !user ? json(res, 422, { status: false, message: 'Username invalid' }) : json(res, 200, token)
   } catch (error) {
     next(error)
   }
-})
-const getSignUp = (async (req:any, res:any, next:any) => {
+}
+export const getSignUp = async (req: any, res: any, next: any) => {
   try {
     const hash = await bcrypt.hash(req.body.password, 10)
     const { username, email } = req.body
@@ -59,12 +43,25 @@ const getSignUp = (async (req:any, res:any, next:any) => {
   } catch (error) {
     next(error)
   }
-})
+}
 
-const getBannerImage = (async (req: any, res: any, next: any) => {
-  
-})
+export const getBannerImage = async (req: any, res: any, next: any) => {}
 
-module.exports = {
-  getSignIn, getSignUp, getBannerImage, getUsersAll
+export const getUpdate = async (req: any, res: any, next: any) => {
+  try {
+    const hash = await bcrypt.hash(req.body.password, 10)
+    const { id } = req.params
+    const user = await prisma.user.update({
+      where: { id },
+      data: {
+        password: hash,
+      },
+      select: {
+        email: true,
+      },
+    })
+    return res.status(200).json(user)
+  } catch (error) {
+    next(error)
+  }
 }
