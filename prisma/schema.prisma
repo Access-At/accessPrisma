@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String            @id @default(uuid())
+  email           String            @unique
+  username        String            @unique
+  password        String            @db.VarChar(255)
+  createAt        DateTime          @default(now())
+  updateAt        DateTime          @updatedAt
+  session         Session[]         @relation("Login")
+  writeThread     Thread[]          @relation("WriterThread")
+  commentThread   CommentThread[]   @relation("CommentThread")
+  likeThread      LikeThread[]      @relation("LikeThread")
+  saveThread      SaveThread[]      @relation("SaveThread")
+  ShowCase        ShowCase[]
+  LikeShowCase    LikeShowCase[]
+  SaveShowCase    SaveShowCase[]
+  CommentShowCase CommentShowCase[]
+  Notifications   Notifications[]
+}
+
+model Notifications {
+  id          String  @id @default(uuid())
+  description String  @db.Text
+  isView      Boolean @default(false)
+  user        User    @relation(fields: [targetId], references: [id])
+  targetId    String
+}
+
+model Session {
+  id       String   @id @default(uuid())
+  token    String   @default(uuid())
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+  userId   String
+  loginBy  User     @relation("Login", fields: [userId], references: [id])
+}
+
+model Thread {
+  id            String          @id @default(uuid())
+  title         String          @db.VarChar(255)
+  description   String          @db.Text
+  slug          String          @unique
+  views         Int             @default(0)
+  createAt      DateTime        @default(now())
+  updateAt      DateTime        @updatedAt
+  authorId      String
+  author        User            @relation("WriterThread", fields: [authorId], references: [id])
+  commentThread CommentThread[]
+  likeThread    LikeThread[]
+  saveThread    SaveThread[]
+}
+
+model LikeThread {
+  id       String  @id @default(uuid())
+  threadId String?
+  userId   String?
+  thread   Thread? @relation(fields: [threadId], references: [id])
+  likeBy   User?   @relation("LikeThread", fields: [userId], references: [id])
+}
+
+model SaveThread {
+  id       String  @id @default(uuid())
+  threadId String?
+  userId   String?
+  thread   Thread? @relation(fields: [threadId], references: [id])
+  saveBy   User?   @relation("SaveThread", fields: [userId], references: [id])
+}
+
+model CommentThread {
+  id          String  @id @default(uuid())
+  description String  @db.Text
+  thread      Thread? @relation(fields: [threadId], references: [id])
+  threadId    String?
+  commentBy   User?   @relation("CommentThread", fields: [userId], references: [id])
+  userId      String?
+}
+
+model ShowCase {
+  id              String            @id @default(uuid())
+  title           String            @db.VarChar(255)
+  description     String            @db.Text
+  slug            String            @unique
+  views           Int               @default(0)
+  createAt        DateTime          @default(now())
+  updateAt        DateTime          @updatedAt
+  authorShowCase  User?             @relation(fields: [authorId], references: [id])
+  authorId        String?
+  commentShowCase CommentShowCase[]
+  likeShowCase    LikeShowCase[]
+  saveShowCase    SaveShowCase[]
+}
+
+model LikeShowCase {
+  id         String    @id @default(uuid())
+  showCaseId String?
+  userId     String?
+  showCase   ShowCase? @relation(fields: [showCaseId], references: [id])
+  likeBy     User?     @relation(fields: [userId], references: [id])
+}
+
+model SaveShowCase {
+  id         String    @id @default(uuid())
+  showCaseId String?
+  userId     String?
+  showCase   ShowCase? @relation(fields: [showCaseId], references: [id])
+  saveBy     User?     @relation(fields: [userId], references: [id])
+}
+
+model CommentShowCase {
+  id          String    @id @default(uuid())
+  description String    @db.Text
+  showCase    ShowCase? @relation(fields: [showCaseId], references: [id])
+  showCaseId  String?
+  commentBy   User?     @relation(fields: [userId], references: [id])
+  userId      String?
+}
