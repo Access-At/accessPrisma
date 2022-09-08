@@ -11,34 +11,43 @@ export const validationThreadCreate = async (authorId: string, description: stri
 }
 
 export const validationThreadLike = async (threadId: string, userId: string) => {
-  
   if (!threadId || !userId) return -1
   const thread = await prisma.thread.findFirst({
     where: {
       id: threadId,
-    }
+    },
   })
   if (!thread) return -2
   const user = await prisma.user.findFirst({
     where: {
-      id :userId
-    }
+      id: userId,
+    },
   })
 
-  if (!user) return -3 
+  if (!user) return -3
   const isLike = await prisma.likeThread.findFirst({
     where: {
       AND: [
         {
-          threadId
-        }, {
-          userId
-        }
-      ]
-    }
+          threadId,
+        },
+        {
+          userId,
+        },
+      ],
+    },
   })
   if (isLike) return -4
 }
 
-export const validationThreadUpdate = () => {}
-export const validationThreadDelete = () => {}
+export const validationThreadUpdate = async (threadId: string, authorId: string) => {
+  // if (!threadId || authorId) return -1
+  // const thread = await prisma.thread.findFirst({ where: { id: threadId } })
+  // if (!thread) return -2
+  // const user = await prisma.thread.findFirst({ where: { authorId } })
+  // if (!user) return -3
+}
+
+export const validationThreadDelete = async (threadId: string, authoId: string) => {
+  if (!threadId || !authoId) return -1
+}

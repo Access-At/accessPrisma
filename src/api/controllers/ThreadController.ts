@@ -1,5 +1,5 @@
-import { threadCreate, threadLikes } from './../models/ThreadModel';
-import { Response200, Response400 } from '../helpers/Response'
+import { threadCreate, threadDelete, threadLikes, threadUpdate } from './../models/ThreadModel'
+import { Response200, Response204, Response400 } from '../helpers/Response'
 import { thread } from '../models/ThreadModel'
 
 export const getAllThread = async (req: any, res: any) => {
@@ -13,8 +13,8 @@ export const getAllThread = async (req: any, res: any) => {
 
 export const CreateThread = async (req: any, res: any) => {
   const { description } = req.body
-  const authorId = res.get("userId")
-  
+  const authorId = res.get('userId')
+
   const threads = await threadCreate(authorId, description)
   if (typeof threads === 'string') return Response400(res, threads)
   return Response200(res, threads)
@@ -22,12 +22,26 @@ export const CreateThread = async (req: any, res: any) => {
 
 export const LikeThread = async (req: any, res: any) => {
   const { threadId } = req.body
-  const authorId = res.get("userId")
-  
-  const threads = await threadLikes(threadId,authorId)
+  const authorId = res.get('userId')
+
+  const threads = await threadLikes(threadId, authorId)
   if (typeof threads === 'string') return Response400(res, threads)
   return Response200(res, threads)
 }
 
-export const UpdateThread = () => {}
-export const DeleteThread = () => {}
+export const UpdateThread = async (req: any, res: any) => {
+  // const { threadId, description } = req.body
+  // const authorId = res.get('userId')
+  // const UpdateThread = await threadUpdate(threadId, authorId, description)
+  // if (typeof UpdateThread === 'string') return Response400(res, UpdateThread)
+  // return Response200(res, UpdateThread)
+}
+
+export const DeleteThread = async (req: any, res: any) => {
+  const { threadId } = req.body
+  const authorId = res.get('userId')
+
+  const deleteThread = await threadDelete(threadId, authorId)
+  if (typeof deleteThread === 'string') return Response400(res, deleteThread)
+  return Response204(res)
+}

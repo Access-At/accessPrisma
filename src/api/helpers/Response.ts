@@ -12,6 +12,10 @@ export const Response201 = (res: any, json: any) => {
   })
 }
 
+export const Response204 = (res: any) => {
+  return res.status(204).json({})
+}
+
 export const Response400 = (res: any, message: string) => {
   return res.status(400).json({
     status: false,
