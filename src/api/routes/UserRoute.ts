@@ -1,24 +1,10 @@
-import { Router } from "express";
-import prisma from "../../../prisma";
+import { Router } from 'express'
+import { getProfile, getUpdate } from '../controllers/UserController'
+import isAuthorized from '../middlewares/isAuthorized'
 
-const route = Router();
+const route = Router()
 
-// // get user gabisa gi auth controller karna ada userId yang true, jadi gua pindahin ke sini
-route.get("/users/profile", async (req, res, next) => {
-  try {
-    const users = await prisma.user.findMany();
-    return res.json({
-      users,
-    });
-  } catch (error) {
-    next(error);
-  }
-});
+route.get('/user/profile/:username?', isAuthorized, getProfile)
+route.put('/user/profile', isAuthorized, getUpdate)
 
-// route.post("/users/sign-up", getSignUp);
-
-// route.post("/users/sign-in", getSignIn);
-
-// route.put("/user/:id", getUpdate);
-
-// export default route;
+export default route

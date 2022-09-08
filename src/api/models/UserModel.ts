@@ -1,76 +1,79 @@
-import { validationSignOut } from './../validations/UserValidation';
+import { validationProfile, validationProfileUpdate, validationSignOut } from './../validations/UserValidation'
 
-import prisma from "../../../prisma";
-import {
-  validationSignIn,
-  validationSignup,
-} from "../validations/UserValidation";
-import bcrypt from "bcrypt";
+import prisma from '../../../prisma'
+import { validationSignIn, validationSignup } from '../validations/UserValidation'
+import bcrypt from 'bcrypt'
 
 export const signIn = async (username: string, password: string) => {
-  if ((await validationSignIn(username, password)) === -1)
-    return "Username or password cannot be empty";
+  if ((await validationSignIn(username, password)) === -1) return 'Username or password cannot be empty'
 
-  if ((await validationSignIn(username, password)) === -2)
-    return "Can't find username";
+  if ((await validationSignIn(username, password)) === -2) return "Can't find username"
 
-  if ((await validationSignIn(username, password)) === -3)
-    return "Invalid password";
+  if ((await validationSignIn(username, password)) === -3) return 'Invalid password'
 
-  const userToken = await prisma.user.findFirst({ where: { username } });
+  const userToken = await prisma.user.findFirst({ where: { username } })
   const token = await prisma.session.create({
     data: {
-      userId: userToken?.id || "",
+      userId: userToken?.id || '',
     },
     select: {
       token: true,
       userId: true,
     },
-  });
+  })
 
-  return token;
-};
+  return token
+}
 
-export const signUp = async (
-  username: string,
-  email: string,
-  password: string
-) => {
-  if ((await validationSignup(username, email, password)) === -1)
-    return "fields cannot be empty";
+export const signUp = async (username: string, email: string, password: string) => {
+  if ((await validationSignup(username, email, password)) === -1) return 'fields cannot be empty'
 
-  if ((await validationSignup(username, email, password)) === -2)
-    return "Please input valid email";
+  if ((await validationSignup(username, email, password)) === -2) return 'Please input valid email'
 
-  if ((await validationSignup(username, email, password)) === -3)
-    return "there is already a user using it";
+  if ((await validationSignup(username, email, password)) === -3) return 'there is already a user using it'
 
-  const hash = await bcrypt.hash(password, 10);
+  const hash = await bcrypt.hash(password, 10)
   const users = await prisma.user.create({
     data: {
       username,
       email,
       password: hash,
     },
-  });
+  })
 
-  
-  return users;
-};
+  return users
+}
 
-export const signOut = async(
-  id: string
-) => {
+export const signOut = async (id: string) => {
+  if ((await validationSignOut(id)) === -1) return 'Authorized, please login'
 
-  if ((await validationSignOut(id)) === -1)
-    return "Authorized, please login";
-  
   const signout = await prisma.session.deleteMany({
     where: {
-      userId: id
-    }
+      userId: id,
+    },
   })
-  
-  
+
   return signOut
+}
+
+export const profile = async (username: string) => {
+  if ((await validationProfile(username)) === -1) return "Username can't be empty"
+  if ((await validationProfile(username)) === -2) return 'User not found'
+
+  const user = await prisma.user.findUnique({ where: { username } })
+  return user
+}
+
+export const profileUpdate = async (id: string, displayName: string, bio: string) => {
+  if ((await validationProfileUpdate(id)) === -1) return "userId can't be empty"
+  if ((await validationProfileUpdate(id)) === -2) return 'UserId not found'
+
+  const userId = await prisma.user.update({
+    where: { id },
+    data: {
+      displayName,
+      bio,
+    },
+  })
+  return userId
 }

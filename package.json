@@ -10,7 +10,9 @@
     "generate": "prisma generate",
     "setup": "prisma migrate dev --name AcccessForum && prisma migrate reset &&  prisma generate",
     "dev": "nodemon src/index.ts",
-    "seed": "prisma db seed"
+    "seed": "prisma db seed",
+    "studio": "prisma studio",
+    "prismix": "prismix && prisma format"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"

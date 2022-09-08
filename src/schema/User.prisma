@@ -1,0 +1,38 @@
+model User {
+  id              String            @id @default(uuid())
+  email           String            @unique
+  username        String            @unique
+  displayName     String?           @db.VarChar(120)
+  bio             String?           @db.Text
+  password        String            @db.VarChar(255)
+  createAt        DateTime          @default(now())
+  updateAt        DateTime          @updatedAt
+  session         Session[]         @relation("Login")
+  writeThread     Thread[]          @relation("WriterThread")
+  commentThread   CommentThread[]   @relation("CommentThread")
+  likeThread      LikeThread[]      @relation("LikeThread")
+  saveThread      SaveThread[]      @relation("SaveThread")
+  ShowCase        ShowCase[]
+  LikeShowCase    LikeShowCase[]
+  SaveShowCase    SaveShowCase[]
+  CommentShowCase CommentShowCase[]
+  Notifications   Notifications[]
+  ThreadView      ThreadView[]
+}
+
+model Notifications {
+  id          String  @id @default(uuid())
+  description String  @db.Text
+  isView      Boolean @default(false)
+  user        User    @relation(fields: [targetId], references: [id])
+  targetId    String
+}
+
+model Session {
+  id       String   @id @default(uuid())
+  token    String   @default(uuid())
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+  userId   String
+  loginBy  User     @relation("Login", fields: [userId], references: [id])
+}
