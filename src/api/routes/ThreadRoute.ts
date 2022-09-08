@@ -1,22 +1,10 @@
-import { Router } from "express";
-import isAuthorized from "../middlewares/isAuthorized";
-import prisma from "../../../prisma";
+import { Router } from 'express'
+import { getAllThread, getThreadCreate } from '../controllers/ThreadController'
+import isAuthorized from '../middlewares/isAuthorized'
 
-const route = Router();
+const route = Router()
 
-route.get("/thread", isAuthorized, (async (req: any, res: any, next:any) => {
-   try {
-     const userId = res.get("userId")
-     const users = await prisma.user.findFirst({
-       where: {
-      id : userId
-    }});
-    return res.json({
-      users,
-    });
-  } catch (error) {
-    next(error);
-  }
-}))
+route.get('/thread/:skip?', isAuthorized, getAllThread)
+route.post('/thread/create', isAuthorized, getThreadCreate)
 
-export default route;
+export default route

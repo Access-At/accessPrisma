@@ -1,0 +1,47 @@
+model ShowCase {
+  id              String            @id @default(uuid())
+  title           String            @db.VarChar(255)
+  description     String            @db.Text
+  slug            String            @unique
+  createAt        DateTime          @default(now())
+  updateAt        DateTime          @updatedAt
+  authorShowCase  User?             @relation(fields: [authorId], references: [id])
+  authorId        String?
+  commentShowCase CommentShowCase[]
+  likeShowCase    LikeShowCase[]
+  saveShowCase    SaveShowCase[]
+  viewShowcase    ViewShowcase[]
+}
+
+model LikeShowCase {
+  id         String    @id @default(uuid())
+  showCaseId String?
+  userId     String?
+  showCase   ShowCase? @relation(fields: [showCaseId], references: [id])
+  likeBy     User?     @relation(fields: [userId], references: [id])
+}
+
+model SaveShowCase {
+  id         String    @id @default(uuid())
+  showCaseId String?
+  userId     String?
+  showCase   ShowCase? @relation(fields: [showCaseId], references: [id])
+  saveBy     User?     @relation(fields: [userId], references: [id])
+}
+
+model CommentShowCase {
+  id          String    @id @default(uuid())
+  description String    @db.Text
+  showCase    ShowCase? @relation(fields: [showCaseId], references: [id])
+  showCaseId  String?
+  commentBy   User?     @relation(fields: [userId], references: [id])
+  userId      String?
+}
+
+model ViewShowcase {
+  id         String    @id @default(uuid())
+  showcaseId String?
+  showcase   Showcase? @relation(fields: [showcaseId], references: [id])
+  userId     String?
+  viewBy     User?     @relation(fields: [userId], references: [id])
+}

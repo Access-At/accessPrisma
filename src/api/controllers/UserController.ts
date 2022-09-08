@@ -1,23 +1,21 @@
-import prisma from "../../../prisma";
-import bcrypt from "bcrypt";
+import { profile, profileUpdate } from '../models/UserModel'
+import { Response200, Response400 } from '../helpers/Response'
 
-export const getBannerImage = async (req: any, res: any, next: any) => {};
+export const getProfile = async (req: any, res: any, next: any) => {
+  const { username } = req.params
+  const profiles = await profile(username)
+
+  if (typeof profiles === 'string') return Response400(res, profiles)
+  return Response200(res, profiles)
+}
 
 export const getUpdate = async (req: any, res: any, next: any) => {
-  try {
-    const hash = await bcrypt.hash(req.body.password, 10);
-    const { id } = req.params;
-    const user = await prisma.user.update({
-      where: { id },
-      data: {
-        password: hash,
-      },
-      select: {
-        email: true,
-      },
-    });
-    return res.status(200).json(user);
-  } catch (error) {
-    next(error);
-  }
-};
+  const userId = res.get('userId')
+  const { displayName, bio } = req.body
+  const update = await profileUpdate(userId, displayName, bio)
+
+  if (typeof update === 'string') return Response400(res, update)
+  return Response200(res, profile)
+}
+
+// export const getBannerImage = async (req: any, res: any, next: any) => {}
