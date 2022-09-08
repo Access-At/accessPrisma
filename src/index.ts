@@ -1,20 +1,14 @@
-import express from 'express'
-import user from './routes/users'
-import thread from './routes/Threads'
-// const bodyParser = require('body-parser');
+import express from "express";
+import auth from "./api/routes/AuthRoute";
+import thread from "./api/routes/ThreadRoute";
 
-const PORT = 3001
+const PORT = 3001;
 
+const app = express();
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-const app = express()
-app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
-// app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(express.urlencoded({
-//     extended: true
-// }))
+app.use("/api/v1", auth);
+app.use("/api/v1", thread);
 
-app.use('/api/v1', user)
-app.use('/api/v1', thread)
-
-app.listen(PORT, () => console.log(`Rest Api run on http://localhost:${PORT}`))
+app.listen(PORT, () => console.log(`Rest Api run on http://localhost:${PORT}`));
