@@ -1,3 +1,5 @@
+import { validationSignOut } from './../validations/UserValidation';
+
 import prisma from "../../../prisma";
 import {
   validationSignIn,
@@ -5,12 +7,12 @@ import {
 } from "../validations/UserValidation";
 import bcrypt from "bcrypt";
 
-export const singIn = async (username: string, password: string) => {
+export const signIn = async (username: string, password: string) => {
   if ((await validationSignIn(username, password)) === -1)
     return "Username or password cannot be empty";
 
   if ((await validationSignIn(username, password)) === -2)
-    return "Cannont find username";
+    return "Can't find username";
 
   if ((await validationSignIn(username, password)) === -3)
     return "Invalid password";
@@ -52,5 +54,23 @@ export const signUp = async (
     },
   });
 
+  
   return users;
 };
+
+export const signOut = async(
+  id: string
+) => {
+
+  if ((await validationSignOut(id)) === -1)
+    return "Authorized, please login";
+  
+  const signout = await prisma.session.deleteMany({
+    where: {
+      userId: id
+    }
+  })
+  
+  
+  return signOut
+}

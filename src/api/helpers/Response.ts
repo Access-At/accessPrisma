@@ -23,8 +23,6 @@ export const response401 = (res: any, message: string) => {
   return res
     .status(401)
     .json({
-      status: false,
       message,
-    })
-    .end();
+    }).end()
 };

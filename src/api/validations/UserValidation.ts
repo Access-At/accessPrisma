@@ -29,3 +29,21 @@ export const validationSignup = async (
 
   if (user) return -3;
 };
+
+export const validationSignOut = async(
+  id:string
+) => {
+  const token = await prisma.session.findFirst({
+    where: {
+      userId: id
+    }
+  })
+  if (!token) return -1
+  const users = await prisma.session.findFirst({
+    where: { 
+      userId : id
+    }
+  });
+  
+  return users
+}
