@@ -5,12 +5,13 @@ import { faker } from "@faker-js/faker";
 async function main() {
   if (process.env.NODE_ENV !== "development") return;
 
-  //   await client.user.deleteMany();
-  //   await client.session.deleteMany();
-  //   await client.thread.deleteMany();
-  //   await client.likeThread.deleteMany();
-  //   await client.saveThread.deleteMany();
-  //   await client.commentThread.deleteMany();
+    await client.user.deleteMany({});
+    await client.session.deleteMany({});
+    await client.thread.deleteMany({});
+    await client.likeThread.deleteMany({});
+    await client.saveThread.deleteMany({});
+    await client.commentThread.deleteMany({});
+  
 
   for (let i = 0; i < 20; i++) {
     const user = await client.user.create({
