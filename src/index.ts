@@ -1,17 +1,32 @@
-import express from 'express'
-import auth from './api/routes/AuthRoute'
-import thread from './api/routes/ThreadRoute'
-import user from './api/routes/UserRoute'
-import cors from 'cors'
-const PORT = 3001
+import express from "express";
+import morgan from "morgan";
+import compression from "compression";
+import auth from "./api/routes/AuthRoute";
+import thread from "./api/routes/ThreadRoute";
+import user from "./api/routes/UserRoute";
+import rateLimit from "./api/middlewares/rateLimit";
 
-const app = express()
-app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
-app.use(cors())
+import cors from "cors";
+const PORT = 3001;
 
-app.use('/api/v1', auth)
-app.use('/api/v1', thread)
-app.use('/api/v1', user)
+const app = express();
 
-app.listen(PORT, () => console.log(`Rest Api run on http://localhost:${PORT}`))
+app.use(rateLimit);
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(morgan("dev"));
+app.use(compression());
+app.use(cors());
+
+app.all("/", (req, res) => {
+  res.json({
+    Status: 200,
+    Message: "Welcome to the ACC33SS API",
+  });
+});
+
+app.use("/api/v1", auth);
+app.use("/api/v1", thread);
+app.use("/api/v1", user);
+
+app.listen(PORT, () => console.log(`Rest Api run on http://localhost:${PORT}`));

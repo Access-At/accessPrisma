@@ -7,6 +7,7 @@ import {
   threadUpdate,
   threadSave,
   threadComment,
+  threadDetailLike,
 } from "./../models/ThreadModel";
 import {
   Response200,
@@ -25,10 +26,19 @@ export const getAllThread = async (req: any, res: any) => {
 };
 
 export const detailThread = async (req: any, res: any) => {
-  let { id } = req.params;
+  let { id, skip } = req.params;
   if (!id) return Response404(res, "Not Found Thread");
 
-  const posts = await threadDetail(id);
+  const posts = await threadDetail(id, skip);
+  if (typeof posts === "string") return Response400(res, posts);
+  return Response200(res, posts);
+};
+
+export const detailThreadLike = async (req: any, res: any) => {
+  let { id, skip } = req.params;
+  if (!id) return Response404(res, "Not Found Thread");
+
+  const posts = await threadDetailLike(id, skip);
   if (typeof posts === "string") return Response400(res, posts);
   return Response200(res, posts);
 };

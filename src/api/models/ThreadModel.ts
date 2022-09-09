@@ -27,7 +27,7 @@ export const thread = async (skip: number) => {
   return thread;
 };
 
-export const threadDetail = async (id: string) => {
+export const threadDetail = async (id: string, skip: number) => {
   if ((await validationThreadDetail(id)) === -1) return "Thread is empty";
 
   const thread = await prisma.thread.findFirst({
@@ -40,24 +40,38 @@ export const threadDetail = async (id: string) => {
           createAt: true,
           commentBy: { select: { displayName: true, username: true } },
         },
+        take: 15,
+        skip,
       },
       _count: {
         select: { commentThread: true, saveThread: true, likeThread: true },
       },
     },
   });
+  return thread;
+};
 
-  // const thread = await prisma.thread.findMany({
-  //   skip,
-  //   take: 12,
-  //   orderBy: { createAt: "desc" },
-  //   include: {
-  //     author: { select: { displayName: true } },
-  //     _count: {
-  //       select: { commentThread: true, saveThread: true, likeThread: true },
-  //     },
-  //   },
-  // });
+export const threadDetailLike = async (id: string, skip: number) => {
+  if ((await validationThreadDetail(id)) === -1) return "Thread is empty";
+
+  const thread = await prisma.thread.findFirst({
+    where: { id },
+    include: {
+      likeThread: {
+        select: {
+          likeBy: {
+            select: {
+              bio: true,
+              username: true,
+              displayName: true,
+            },
+          },
+        },
+        take: 15,
+        skip,
+      },
+    },
+  });
   return thread;
 };
 
