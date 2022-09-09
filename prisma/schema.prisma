@@ -31,10 +31,12 @@ model User {
 }
 
 model Notifications {
-  id          String  @id @default(uuid())
-  description String  @db.Text
-  isView      Boolean @default(false)
-  user        User    @relation(fields: [targetId], references: [id])
+  id          String   @id @default(uuid())
+  description String   @db.Text
+  isView      Boolean  @default(false)
+  createAt    DateTime @default(now())
+  updateAt    DateTime @updatedAt
+  user        User     @relation(fields: [targetId], references: [id])
   targetId    String
 }
 
@@ -69,27 +71,33 @@ model ViewThread {
 }
 
 model LikeThread {
-  id       String  @id @default(uuid())
+  id       String   @id @default(uuid())
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
   threadId String?
   userId   String?
-  thread   Thread? @relation(fields: [threadId], references: [id])
-  likeBy   User?   @relation("LikeThread", fields: [userId], references: [id])
+  thread   Thread?  @relation(fields: [threadId], references: [id])
+  likeBy   User?    @relation("LikeThread", fields: [userId], references: [id])
 }
 
 model SaveThread {
-  id       String  @id @default(uuid())
+  id       String   @id @default(uuid())
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
   threadId String?
   userId   String?
-  thread   Thread? @relation(fields: [threadId], references: [id])
-  saveBy   User?   @relation("SaveThread", fields: [userId], references: [id])
+  thread   Thread?  @relation(fields: [threadId], references: [id])
+  saveBy   User?    @relation("SaveThread", fields: [userId], references: [id])
 }
 
 model CommentThread {
-  id          String  @id @default(uuid())
-  description String  @db.Text
-  thread      Thread? @relation(fields: [threadId], references: [id])
+  id          String   @id @default(uuid())
+  description String   @db.Text
+  createAt    DateTime @default(now())
+  updateAt    DateTime @updatedAt
+  thread      Thread?  @relation(fields: [threadId], references: [id])
   threadId    String?
-  commentBy   User?   @relation("CommentThread", fields: [userId], references: [id])
+  commentBy   User?    @relation("CommentThread", fields: [userId], references: [id])
   userId      String?
 }
 
@@ -110,6 +118,8 @@ model ShowCase {
 
 model LikeShowCase {
   id         String    @id @default(uuid())
+  createAt   DateTime  @default(now())
+  updateAt   DateTime  @updatedAt
   showCaseId String?
   userId     String?
   showCase   ShowCase? @relation(fields: [showCaseId], references: [id])
@@ -118,6 +128,8 @@ model LikeShowCase {
 
 model SaveShowCase {
   id         String    @id @default(uuid())
+  createAt   DateTime  @default(now())
+  updateAt   DateTime  @updatedAt
   showCaseId String?
   userId     String?
   showCase   ShowCase? @relation(fields: [showCaseId], references: [id])
@@ -127,6 +139,8 @@ model SaveShowCase {
 model CommentShowCase {
   id          String    @id @default(uuid())
   description String    @db.Text
+  createAt    DateTime  @default(now())
+  updateAt    DateTime  @updatedAt
   showCase    ShowCase? @relation(fields: [showCaseId], references: [id])
   showCaseId  String?
   commentBy   User?     @relation(fields: [userId], references: [id])
@@ -135,6 +149,8 @@ model CommentShowCase {
 
 model ViewShowcase {
   id         String    @id @default(uuid())
+  createAt   DateTime  @default(now())
+  updateAt   DateTime  @updatedAt
   showcaseId String?
   showcase   ShowCase? @relation(fields: [showcaseId], references: [id])
   userId     String?
