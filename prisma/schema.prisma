@@ -40,8 +40,8 @@ model Notifications {
   isView       Boolean     @default(false)
   createAt     DateTime    @default(now())
   updateAt     DateTime    @updatedAt
-  notifBy      User        @relation(fields: [userId], references: [id])
-  userId       String
+  notifBy      User        @relation(fields: [userNotif], references: [id])
+  userNotif    String
   targetId     String
   targetThread Thread?     @relation(fields: [threadId], references: [id])
   threadId     String?
