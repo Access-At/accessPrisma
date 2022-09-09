@@ -1,10 +1,10 @@
-import { Router } from 'express'
-import { getProfile, getUpdate } from '../controllers/UserController'
-import isAuthorized from '../middlewares/isAuthorized'
+import { Router } from "express";
+import { GetProfile, GetUpdate } from "../controllers/UserController";
+import isAuthorized from "../middlewares/isAuthorized";
 
-const route = Router()
+const route = Router();
 
-route.get('/user/profile/:username?', isAuthorized, getProfile)
-route.put('/user/profile', isAuthorized, getUpdate)
+route.get("/user/profile/:username?", isAuthorized, GetProfile);
+route.put("/user/profile", isAuthorized, GetUpdate);
 
-export default route
+export default route;
