@@ -11,8 +11,7 @@
     "setup": "prisma migrate dev --name AcccessForum && prisma migrate reset &&  prisma generate",
     "dev": "nodemon src/index.ts",
     "seed": "prisma db seed",
-    "studio": "prisma studio",
-    "prismix": "prismix && prisma format"
+    "studio": "prisma studio"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
