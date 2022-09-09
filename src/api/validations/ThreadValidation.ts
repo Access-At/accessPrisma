@@ -5,7 +5,7 @@ export const validationThread = async (skip: number) => {
   const thread = await prisma.thread.findMany({
     skip,
     take: 12,
-    orderBy: { createAt: "asc" },
+    orderBy: { createAt: "desc" },
   });
   if (!thread.length) return -1;
 };
