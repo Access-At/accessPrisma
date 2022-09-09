@@ -127,6 +127,7 @@ model ShowCase {
   saveShowCase    SaveShowCase[]
   viewShowcase    ViewShowcase[]
   Notifications   Notifications[]
+  ImageShowcase   ImageShowcase[]
 }
 
 model LikeShowCase {
@@ -168,4 +169,13 @@ model ViewShowcase {
   showcase   ShowCase? @relation(fields: [showcaseId], references: [id])
   userId     String?
   viewBy     User?     @relation(fields: [userId], references: [id])
+}
+
+model ImageShowcase {
+  id         String    @id @default(uuid())
+  createAt   DateTime  @default(now())
+  updateAt   DateTime  @updatedAt
+  showcaseId String?
+  showcase   ShowCase? @relation(fields: [showcaseId], references: [id])
+  userId     String?
 }
