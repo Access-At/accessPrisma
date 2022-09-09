@@ -1,98 +1,95 @@
 import {
-  thread,
-  threadDetail,
-  threadCreate,
-  threadDelete,
-  threadLikes,
-  threadUpdate,
-  threadSave,
-  threadComment,
-  threadDetailLike,
+	thread,
+	threadDetail,
+	threadCreate,
+	threadDelete,
+	threadLikes,
+	threadUpdate,
+	threadSave,
+	threadComment,
+	threadDetailLike,
 } from "./../models/ThreadModel";
-import {
-  Response200,
-  Response204,
-  Response400,
-  Response404,
-} from "../helpers/Response";
+import { Response200, Response204, Response400, Response404 } from "../helpers/Response";
 
-export const getAllThread = async (req: any, res: any) => {
-  let { skip } = req.params;
-  if (skip) skip = parseInt(skip);
+export const GetAllThread = async (req: any, res: any) => {
+	let { skip } = req.params;
+	if (skip) skip = parseInt(skip);
 
-  const posts = await thread(skip);
-  if (typeof posts === "string") return Response400(res, posts);
-  return Response200(res, posts);
+	const posts = await thread(skip);
+	if (typeof posts === "string") return Response400(res, posts);
+	return Response200(res, posts);
 };
 
-export const detailThread = async (req: any, res: any) => {
-  let { id, skip } = req.params;
-  if (!id) return Response404(res, "Not Found Thread");
+export const DetailThread = async (req: any, res: any) => {
+	let { id, skip } = req.params;
+	if (skip) skip = parseInt(skip);
+	if (!id) return Response404(res, "Not Found Thread");
 
-  const posts = await threadDetail(id, skip);
-  if (typeof posts === "string") return Response400(res, posts);
-  return Response200(res, posts);
+	const posts = await threadDetail(id, skip);
+	if (typeof posts === "string") return Response400(res, posts);
+	return Response200(res, posts);
 };
 
-export const detailThreadLike = async (req: any, res: any) => {
-  let { id, skip } = req.params;
-  if (!id) return Response404(res, "Not Found Thread");
+export const DetailThreadLike = async (req: any, res: any) => {
+	let { id, skip } = req.params;
+	if (skip) skip = parseInt(skip);
+	if (!id) return Response404(res, "Not Found Thread");
 
-  const posts = await threadDetailLike(id, skip);
-  if (typeof posts === "string") return Response400(res, posts);
-  return Response200(res, posts);
+	const posts = await threadDetailLike(id, skip);
+	if (typeof posts === "string") return Response400(res, posts);
+	return Response200(res, posts);
 };
 
 export const CreateThread = async (req: any, res: any) => {
-  const { description } = req.body;
-  const authorId = res.get("userId");
+	const { description } = req.body;
+	const authorId = res.get("userId");
 
-  const threads = await threadCreate(authorId, description);
-  if (typeof threads === "string") return Response400(res, threads);
-  return Response200(res, threads);
+	const threads = await threadCreate(authorId, description);
+	if (typeof threads === "string") return Response400(res, threads);
+	return Response200(res, threads);
 };
 
 export const UpdateThread = async (req: any, res: any) => {
-  const { threadId, description } = req.body;
-  const authorId = res.get("userId");
+	const { threadId, description } = req.body;
+	const authorId = res.get("userId");
 
-  const updateThread = await threadUpdate(threadId, authorId, description);
-  if (typeof updateThread === "string") return Response400(res, updateThread);
-  return Response200(res, updateThread);
+	const updateThread = await threadUpdate(threadId, authorId, description);
+	if (typeof updateThread === "string") return Response400(res, updateThread);
+	return Response200(res, updateThread);
 };
 
 export const DeleteThread = async (req: any, res: any) => {
-  const { threadId } = req.body;
-  const authorId = res.get("userId");
+	const { threadId } = req.body;
+	const authorId = res.get("userId");
 
-  const deleteThread = await threadDelete(threadId, authorId);
-  if (typeof deleteThread === "string") return Response400(res, deleteThread);
-  return Response204(res);
+	const deleteThread = await threadDelete(threadId, authorId);
+	if (typeof deleteThread === "string") return Response400(res, deleteThread);
+	return Response204(res);
 };
 
 export const LikeThread = async (req: any, res: any) => {
-  const { threadId } = req.body;
-  const authorId = res.get("userId");
+	const { threadId } = req.body;
+	const authorId = res.get("userId");
 
-  const threads = await threadLikes(threadId, authorId);
-  if (typeof threads === "string") return Response400(res, threads);
-  return Response200(res, threads);
+	const threads = await threadLikes(threadId, authorId);
+	if (typeof threads === "string") return Response400(res, threads);
+	return Response200(res, threads);
 };
 
 export const SaveThread = async (req: any, res: any) => {
-  const { threadId } = req.body;
-  const authorId = res.get("userId");
+	const { threadId } = req.body;
+	const authorId = res.get("userId");
 
-  const threads = await threadSave(threadId, authorId);
-  if (typeof threads === "string") return Response400(res, threads);
-  return Response200(res, threads);
+	const threads = await threadSave(threadId, authorId);
+	if (typeof threads === "string") return Response400(res, threads);
+	return Response200(res, threads);
 };
 
 export const CommentThread = async (req: any, res: any) => {
-  const { threadId, description } = req.body;
-  const userId = res.get("userId");
+	const { threadId, description } = req.body;
+	const userId = res.get("userId");
 
-  const commentThread = await threadComment(threadId, userId, description);
-  if (typeof commentThread === "string") return Response400(res, commentThread);
-  return Response200(res, commentThread);
+	const commentThread = await threadComment(threadId, userId, description);
+	if (typeof commentThread === "string") return Response400(res, commentThread);
+	return Response200(res, commentThread);
 };

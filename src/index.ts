@@ -4,6 +4,7 @@ import compression from "compression";
 import auth from "./api/routes/AuthRoute";
 import thread from "./api/routes/ThreadRoute";
 import user from "./api/routes/UserRoute";
+import notification from "./api/routes/Notification";
 import rateLimit from "./api/middlewares/rateLimit";
 
 import cors from "cors";
@@ -19,14 +20,15 @@ app.use(compression());
 app.use(cors());
 
 app.all("/", (req, res) => {
-  res.json({
-    Status: 200,
-    Message: "Welcome to the ACC33SS API",
-  });
+	res.json({
+		Status: 200,
+		Message: "Welcome to the ACC33SS API",
+	});
 });
 
 app.use("/api/v1", auth);
 app.use("/api/v1", thread);
 app.use("/api/v1", user);
+app.use("/api/v1", notification);
 
 app.listen(PORT, () => console.log(`Rest Api run on http://localhost:${PORT}`));

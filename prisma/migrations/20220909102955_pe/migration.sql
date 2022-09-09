@@ -17,9 +17,14 @@ CREATE TABLE `User` (
 -- CreateTable
 CREATE TABLE `Notifications` (
     `id` VARCHAR(191) NOT NULL,
-    `description` TEXT NOT NULL,
     `isView` BOOLEAN NOT NULL DEFAULT false,
+    `createAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updateAt` DATETIME(3) NOT NULL,
+    `userId` VARCHAR(191) NOT NULL,
     `targetId` VARCHAR(191) NOT NULL,
+    `threadId` VARCHAR(191) NOT NULL,
+    `showId` VARCHAR(191) NOT NULL,
+    `status` ENUM('Like', 'Comment') NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -38,21 +43,28 @@ CREATE TABLE `Session` (
 -- CreateTable
 CREATE TABLE `Thread` (
     `id` VARCHAR(191) NOT NULL,
-    `title` VARCHAR(255) NOT NULL,
     `description` TEXT NOT NULL,
-    `slug` VARCHAR(191) NOT NULL,
-    `views` INTEGER NOT NULL DEFAULT 0,
     `createAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updateAt` DATETIME(3) NOT NULL,
     `authorId` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `Thread_slug_key`(`slug`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `ViewThread` (
+    `id` VARCHAR(191) NOT NULL,
+    `threadId` VARCHAR(191) NULL,
+    `userId` VARCHAR(191) NULL,
+
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `LikeThread` (
     `id` VARCHAR(191) NOT NULL,
+    `createAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updateAt` DATETIME(3) NOT NULL,
     `threadId` VARCHAR(191) NULL,
     `userId` VARCHAR(191) NULL,
 
@@ -62,6 +74,8 @@ CREATE TABLE `LikeThread` (
 -- CreateTable
 CREATE TABLE `SaveThread` (
     `id` VARCHAR(191) NOT NULL,
+    `createAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updateAt` DATETIME(3) NOT NULL,
     `threadId` VARCHAR(191) NULL,
     `userId` VARCHAR(191) NULL,
 
@@ -72,6 +86,8 @@ CREATE TABLE `SaveThread` (
 CREATE TABLE `CommentThread` (
     `id` VARCHAR(191) NOT NULL,
     `description` TEXT NOT NULL,
+    `createAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updateAt` DATETIME(3) NOT NULL,
     `threadId` VARCHAR(191) NULL,
     `userId` VARCHAR(191) NULL,
 
@@ -84,7 +100,6 @@ CREATE TABLE `ShowCase` (
     `title` VARCHAR(255) NOT NULL,
     `description` TEXT NOT NULL,
     `slug` VARCHAR(191) NOT NULL,
-    `views` INTEGER NOT NULL DEFAULT 0,
     `createAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updateAt` DATETIME(3) NOT NULL,
     `authorId` VARCHAR(191) NULL,
@@ -96,6 +111,8 @@ CREATE TABLE `ShowCase` (
 -- CreateTable
 CREATE TABLE `LikeShowCase` (
     `id` VARCHAR(191) NOT NULL,
+    `createAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updateAt` DATETIME(3) NOT NULL,
     `showCaseId` VARCHAR(191) NULL,
     `userId` VARCHAR(191) NULL,
 
@@ -105,6 +122,8 @@ CREATE TABLE `LikeShowCase` (
 -- CreateTable
 CREATE TABLE `SaveShowCase` (
     `id` VARCHAR(191) NOT NULL,
+    `createAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updateAt` DATETIME(3) NOT NULL,
     `showCaseId` VARCHAR(191) NULL,
     `userId` VARCHAR(191) NULL,
 
@@ -115,20 +134,45 @@ CREATE TABLE `SaveShowCase` (
 CREATE TABLE `CommentShowCase` (
     `id` VARCHAR(191) NOT NULL,
     `description` TEXT NOT NULL,
+    `createAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updateAt` DATETIME(3) NOT NULL,
     `showCaseId` VARCHAR(191) NULL,
     `userId` VARCHAR(191) NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+-- CreateTable
+CREATE TABLE `ViewShowcase` (
+    `id` VARCHAR(191) NOT NULL,
+    `createAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updateAt` DATETIME(3) NOT NULL,
+    `showcaseId` VARCHAR(191) NULL,
+    `userId` VARCHAR(191) NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 -- AddForeignKey
-ALTER TABLE `Notifications` ADD CONSTRAINT `Notifications_targetId_fkey` FOREIGN KEY (`targetId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Notifications` ADD CONSTRAINT `Notifications_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Notifications` ADD CONSTRAINT `Notifications_threadId_fkey` FOREIGN KEY (`threadId`) REFERENCES `Thread`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Notifications` ADD CONSTRAINT `Notifications_showId_fkey` FOREIGN KEY (`showId`) REFERENCES `ShowCase`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Session` ADD CONSTRAINT `Session_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Thread` ADD CONSTRAINT `Thread_authorId_fkey` FOREIGN KEY (`authorId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `ViewThread` ADD CONSTRAINT `ViewThread_threadId_fkey` FOREIGN KEY (`threadId`) REFERENCES `Thread`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `ViewThread` ADD CONSTRAINT `ViewThread_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `LikeThread` ADD CONSTRAINT `LikeThread_threadId_fkey` FOREIGN KEY (`threadId`) REFERENCES `Thread`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
@@ -168,3 +212,9 @@ ALTER TABLE `CommentShowCase` ADD CONSTRAINT `CommentShowCase_showCaseId_fkey` F
 
 -- AddForeignKey
 ALTER TABLE `CommentShowCase` ADD CONSTRAINT `CommentShowCase_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `ViewShowcase` ADD CONSTRAINT `ViewShowcase_showcaseId_fkey` FOREIGN KEY (`showcaseId`) REFERENCES `ShowCase`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `ViewShowcase` ADD CONSTRAINT `ViewShowcase_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
