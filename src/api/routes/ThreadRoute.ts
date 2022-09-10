@@ -25,6 +25,5 @@ route.delete("/thread/delete", isAuthorized, DeleteThread);
 route.post("/thread/like", isAuthorized, LikeThread);
 route.post("/thread/comment", isAuthorized, CommentThread);
 route.post("/thread/save", isAuthorized, SaveThread);
-// route.post("/thread/subscribe", isAuthorized, SubscribeThread);
 
 export default route;

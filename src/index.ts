@@ -9,6 +9,8 @@ import showcase from "./api/routes/ShowcaseRoute";
 import populer from "./api/routes/PopulerRoute";
 import circle from "./api/routes/CirclesRoute";
 import rateLimit from "./api/middlewares/rateLimit";
+import multers from "multer"
+import sharp from "sharp"
 
 import cors from "cors";
 const PORT = 3001;
@@ -21,6 +23,8 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(compression());
 app.use(cors());
+app.use(multers());
+app.use(sharp());
 
 app.all("/", (req, res) => {
 	res.json({
