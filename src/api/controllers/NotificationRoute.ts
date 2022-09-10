@@ -1,5 +1,5 @@
 import { Response200, Response204, Response400, Response404 } from "../helpers/Response";
-import { notification, notificationDetail } from "../models/Notification";
+import { notification, notificationDetail } from "../models/NotificationModel";
 
 export const GetNotification = async (req: any, res: any) => {
 	const userId = res.get("userId");

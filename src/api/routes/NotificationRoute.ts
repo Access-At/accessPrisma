@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { DetailNotification, GetNotification } from "../controllers/Notification";
+import { DetailNotification, GetNotification } from "../controllers/NotificationRoute";
 import isAuthorized from "../middlewares/isAuthorized";
 
 const route = Router();
