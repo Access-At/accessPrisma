@@ -7,6 +7,7 @@ import user from "./api/routes/UserRoute";
 import notification from "./api/routes/NotificationRoute";
 import showcase from "./api/routes/ShowcaseRoute";
 import populer from "./api/routes/PopulerRoute";
+import circle from "./api/routes/CirclesRoute";
 import rateLimit from "./api/middlewares/rateLimit";
 
 import cors from "cors";
@@ -34,5 +35,6 @@ app.use("/api/v1", user);
 app.use("/api/v1", notification);
 app.use("/api/v1", showcase);
 app.use("/api/v1", populer);
+app.use("/api/v1", circle);
 
 app.listen(PORT, () => console.log(`Rest Api run on http://localhost:${PORT}`));
