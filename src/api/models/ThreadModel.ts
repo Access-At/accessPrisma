@@ -9,7 +9,7 @@ import {
 } from "./../validations/ThreadValidation";
 import prisma from "../../../prisma";
 import { validationThread } from "../validations/ThreadValidation";
-import { notificationCreate } from "./Notification";
+import { notificationCreate } from "./NotificationModel";
 
 export const thread = async (skip: number) => {
 	if ((await validationThread(skip)) === -1) return "Posts is empty";
