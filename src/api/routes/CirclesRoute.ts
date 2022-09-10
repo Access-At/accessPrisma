@@ -4,7 +4,6 @@ import isAuthorized from "../middlewares/isAuthorized";
 
 const route = Router();
 
-route.get("/circles", isAuthorized, GetAllCircles);
-// route.get("/circles/:username?", isAuthorized, DetailNotification);
+route.get("/circles/:skip?", isAuthorized, GetAllCircles);
 
 export default route;
