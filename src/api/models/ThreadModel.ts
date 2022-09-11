@@ -1,4 +1,3 @@
-
 import {
 	validationThreadCreate,
 	validationThreadDelete,
@@ -10,104 +9,83 @@ import {
 } from "./../validations/ThreadValidation";
 import prisma from "../../../prisma";
 import { validationThread } from "../validations/ThreadValidation";
-import { notificationCreate } from "./NotificationModel";
+import { notificationSend } from "./NotificationModel";
 import { allThreadQuery } from "../query/thread/ThreadAll";
+import { ThreadDetails } from "../query/thread/ThreadDetails";
+import { ThreadDetailLikes } from "../query/thread/ThreadDetailLikes";
+import { ThreadCreate } from "../query/thread/ThreadCreate";
+import { ThreadThisDisLike, ThreadThisLikes } from "../query/thread/ThreadThisLikes";
 
-export const thread = async (skip: number) => {
+/**
+ * It's a function that returns a promise that resolves to a string or an array of objects
+ * @param {number} skip - number - the number of posts to skip
+ * @returns a promise.
+ */
+
+export const getAllThread = async (skip: number) => {
 	if ((await validationThread(skip)) === -1) return "Posts is empty";
-
-	const threadsQueryAll = await allThreadQuery(skip)
-	return threadsQueryAll;
+	const getTreadsAll = await allThreadQuery(skip)
+	return getTreadsAll;
 };
 
-export const threadDetail = async (id: string, skip: number) => {
+/**
+ * It gets the thread details of a thread with a given id and skips the first n number of comments
+ * @param {string} id - string -&gt; id of the thread
+ * @param {number} skip - number =&gt; skip is the number of posts to skip.
+ * @returns the result of the ThreadDetails function.
+ */
+
+export const getTreadDetail = async (id: string, skip: number) => {
 	if ((await validationThreadDetail(id)) === -1) return "Thread is empty";
-
-	const thread = await prisma.thread.findFirst({
-		where: { id },
-		include: {
-			author: { select: { displayName: true, username:true } },
-			commentThread: {
-				select: {
-					description: true,
-					createAt: true,
-					commentBy: { select: { displayName: true, username: true } },
-				},
-				take: 15,
-				skip,
-			},
-			_count: {
-				select: { commentThread: true, saveThread: true, likeThread: true },
-			},
-		},
-	});
-	return thread;
+	const getThreadDetails = await ThreadDetails(id, skip)
+	return getThreadDetails;
 };
 
-export const threadDetailLike = async (id: string, skip: number) => {
+/**
+ * If the thread is empty, return 'Thread is empty', otherwise return the thread details.
+ * @param {string} id - The id of the thread
+ * @param {number} skip - number
+ * @returns The return value is the result of the function.
+ */
+export const getThreadDetailLike = async (id: string, skip: number) => {
 	if ((await validationThreadDetail(id)) === -1) return "Thread is empty";
-
-	const thread = await prisma.thread.findFirst({
-		where: { id },
-		include: {
-			likeThread: {
-				select: {
-					likeBy: {
-						select: {
-							bio: true,
-							username: true,
-							displayName: true,
-						},
-					},
-				},
-				take: 15,
-				skip,
-			},
-		},
-	});
-	return thread;
+	const ThreadLike = await ThreadDetailLikes(id, skip)
+	return ThreadLike;
 };
 
-export const threadCreate = async (authorId: string, description: string) => {
+/**
+ * If the validationThreadCreate function returns -1, return "Description can't be empty", otherwise
+ * return the result of the ThreadCreate function.
+ * @param {string} authorId - string
+ * @param {string} description - string
+ * @returns a promise.
+ */
+
+export const getThreadCreate = async (authorId: string, description: string) => {
 	if ((await validationThreadCreate(authorId, description)) === -1) return "Description can't be empty";
-
-	const threadCreate = await prisma.thread.create({
-		data: {
-			authorId,
-			description,
-		},
-	});
+	const threadCreate = await ThreadCreate(authorId, description)
 	return threadCreate;
 };
 
-export const threadLikes = async (threadId: string, userId: string) => {
+/**
+ * If the validationThreadLike function returns -1, -2, -3, or -4, return the appropriate error
+ * message. Otherwise, call the ThreadThisLikes function and the notificationSend function, and return
+ * the result of the ThreadThisLikes function.
+ * @param {string} threadId - The id of the thread
+ * @param {string} userId - The user who liked the thread
+ * @returns The return value is a string.
+ */
+
+export const thisThreadLikes = async (threadId: string, userId: string) => {
 	if ((await validationThreadLike(threadId, userId)) === -1) return "Can't be empty";
 	if ((await validationThreadLike(threadId, userId)) === -2) return "Can't find thread";
 	if ((await validationThreadLike(threadId, userId)) === -3) return "Can't find user";
 	if ((await validationThreadLike(threadId, userId)) === -4) {
-		const disLike = await prisma.likeThread.deleteMany({
-			where: {
-				AND: [
-					{
-						threadId,
-					},
-					{
-						userId,
-					},
-				],
-			},
-		});
+		const disLike = await ThreadThisDisLike(threadId,userId)
 		return disLike;
 	}
-
-	const threadLike = await prisma.likeThread.create({
-		data: {
-			threadId,
-			userId,
-		},
-	});
-
-	await notificationCreate(userId, "", "", threadId, "Like");
+	const threadLike = await ThreadThisLikes(threadId,userId)
+	await notificationSend(userId, "", "", threadId, "Like");
 
 	return threadLike;
 };
@@ -179,7 +157,7 @@ export const threadComment = async (threadId: string, userId: string, descriptio
 		},
 	});
 
-	await notificationCreate(userId, description, "", threadId, "Comment");
+	await notificationSend(userId, description, "", threadId, "Comment");
 
 	return threadComment;
 };
