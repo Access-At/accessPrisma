@@ -8,9 +8,9 @@ import notification from "./api/routes/NotificationRoute";
 import showcase from "./api/routes/ShowcaseRoute";
 import populer from "./api/routes/PopulerRoute";
 import circle from "./api/routes/CirclesRoute";
+import resizeImage from "./api/routes/Resize";
 import rateLimit from "./api/middlewares/rateLimit";
-import multers from "multer"
-import sharp from "sharp"
+import multers from "multer";
 
 import cors from "cors";
 const PORT = 3001;
@@ -23,8 +23,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(compression());
 app.use(cors());
-app.use(multers());
-app.use(sharp());
+// app.use(multers());
 
 app.all("/", (req, res) => {
 	res.json({
@@ -40,5 +39,6 @@ app.use("/api/v1", notification);
 app.use("/api/v1", showcase);
 app.use("/api/v1", populer);
 app.use("/api/v1", circle);
+app.use("/api/vi", resizeImage);
 
 app.listen(PORT, () => console.log(`Rest Api run on http://localhost:${PORT}`));
