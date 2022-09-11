@@ -5,4 +5,6 @@ export const RandomOrder = (orderBy: any, randomOrder:any) => {
 	}
 	const orderByData = randomPick(orderBy);
   const orderRandomData = randomPick(randomOrder);
+
+	return {orderByData: [], orderRandpmData: []}
 }

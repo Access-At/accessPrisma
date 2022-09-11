@@ -32,7 +32,7 @@ export const notificationDetail = async (skip: number) => {
 	return notif;
 };
 
-export const notificationCreate = async (
+export const notificationSend = async (
 	userId: string,
 	description: string,
 	showId: any,

@@ -1,13 +1,13 @@
 import {
-	thread,
-	threadDetail,
-	threadCreate,
+	getAllThread,
+	getTreadDetail,
+	getThreadCreate,
 	threadDelete,
-	threadLikes,
+	thisThreadLikes,
 	threadUpdate,
 	threadSave,
 	threadComment,
-	threadDetailLike,
+	getThreadDetailLike,
 } from "./../models/ThreadModel";
 import { Response200, Response204, Response400, Response404 } from "../helpers/Response";
 
@@ -15,7 +15,7 @@ export const GetAllThread = async (req: any, res: any) => {
 	let { skip } = req.params;
 	if (skip) skip = parseInt(skip);
 
-	const posts = await thread(skip);
+	const posts = await getAllThread(skip);
 	if (typeof posts === "string") return Response400(res, posts);
 	return Response200(res, posts);
 };
@@ -24,8 +24,7 @@ export const DetailThread = async (req: any, res: any) => {
 	let { id, skip } = req.params;
 	if (skip) skip = parseInt(skip);
 	if (!id) return Response404(res, "Not Found Thread");
-
-	const posts = await threadDetail(id, skip);
+	const posts = await getTreadDetail(id, skip);
 	if (typeof posts === "string") return Response400(res, posts);
 	return Response200(res, posts);
 };
@@ -35,7 +34,7 @@ export const DetailThreadLike = async (req: any, res: any) => {
 	if (skip) skip = parseInt(skip);
 	if (!id) return Response404(res, "Not Found Thread");
 
-	const posts = await threadDetailLike(id, skip);
+	const posts = await getThreadDetailLike(id, skip);
 	if (typeof posts === "string") return Response400(res, posts);
 	return Response200(res, posts);
 };
@@ -44,7 +43,7 @@ export const CreateThread = async (req: any, res: any) => {
 	const { description } = req.body;
 	const authorId = res.get("userId");
 
-	const threads = await threadCreate(authorId, description);
+	const threads = await getThreadCreate(authorId, description);
 	if (typeof threads === "string") return Response400(res, threads);
 	return Response200(res, threads);
 };
@@ -71,7 +70,7 @@ export const LikeThread = async (req: any, res: any) => {
 	const { threadId } = req.body;
 	const authorId = res.get("userId");
 
-	const threads = await threadLikes(threadId, authorId);
+	const threads = await thisThreadLikes(threadId, authorId);
 	if (typeof threads === "string") return Response400(res, threads);
 	return Response200(res, threads);
 };

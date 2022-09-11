@@ -1,4 +1,3 @@
-import { RandomOrder } from './../../helpers/RandomOrder';
 import prisma from "../../../../prisma";
 
 export const allThreadQuery = async (skip: number) => {
@@ -8,17 +7,14 @@ export const allThreadQuery = async (skip: number) => {
 	}
 	const orderBy = randomPick(['id', 'description', 'createAt' ,'updateAt']);
 	const orderRandom = randomPick([`asc`, `desc`]);
-
-	// RandomOrder(
-	// 	['id', 'description', 'createAt', 'updateAt'], [`asc`, `desc`])
  const thread = await prisma.thread.findMany({
 		skip,
 		take: 12,
 		orderBy: { [orderBy]: orderRandom },
-		where: {
-			NOT: {
-				id: "desc"
-			}
+	 where: {
+		 AND: {
+			 id: "desc"
+		 }
 		},
 		include: {
 			author: { select: { displayName: true, username:true } },

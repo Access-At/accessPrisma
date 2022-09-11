@@ -9,7 +9,7 @@ import {
 	validationShowcaseComment,
 } from "./../validations/ShowcaseValidation";
 import prisma from "../../../prisma";
-import { notificationCreate } from "./NotificationModel";
+import { notificationSend } from "./NotificationModel";
 import slugify from "slugify";
 
 export const showcase = async (skip: number) => {
@@ -133,7 +133,7 @@ export const showcaseLikes = async (showCaseId: string, userId: string) => {
 		},
 	});
 
-	await notificationCreate(userId, "", showCaseId, "", "Like");
+	await notificationSend(userId, "", showCaseId, "", "Like");
 
 	return showcaseLike;
 };
@@ -216,7 +216,7 @@ export const showcaseComment = async (showCaseId: string, userId: string, descri
 		},
 	});
 
-	await notificationCreate(userId, description, showCaseId, "", "Comment");
+	await notificationSend(userId, description, showCaseId, "", "Comment");
 
 	return showcaseComment;
 };
