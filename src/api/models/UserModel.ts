@@ -41,13 +41,13 @@ export const signUp = async (
   password: string
 ) => {
   if ((await validationSignup(username, email, password)) === -1)
-    return "fields cannot be empty";
+    return "Fields cannot be empty";
 
   if ((await validationSignup(username, email, password)) === -2)
     return "Please input valid email";
 
   if ((await validationSignup(username, email, password)) === -3)
-    return "there is already a user using it";
+    return "There is already a user using it";
 
   const hash = await bcrypt.hash(password, 10);
   const users = await prisma.user.create({
@@ -63,7 +63,7 @@ export const signUp = async (
 };
 
 export const signOut = async (id: string) => {
-  if ((await validationSignOut(id)) === -1) return "Authorized, please login";
+  if ((await validationSignOut(id)) === -1) return "Timeout account, please login";
 
   const signout = await prisma.session.deleteMany({
     where: {
@@ -77,7 +77,7 @@ export const signOut = async (id: string) => {
 export const profile = async (username: string) => {
   if ((await validationProfile(username)) === -1)
     return "Username can't be empty";
-  if ((await validationProfile(username)) === -2) return "User not found";
+  if ((await validationProfile(username)) === -2) return "Username not found";
 
   const user = await prisma.user.findUnique({ where: { username } });
   return user;
@@ -90,7 +90,7 @@ export const profileUpdate = async (
 ) => {
   if ((await validationProfileUpdate(id)) === -1)
     return "userId can't be empty";
-  if ((await validationProfileUpdate(id)) === -2) return "UserId not found";
+  if ((await validationProfileUpdate(id)) === -2) return "User not found";
 
   const userId = await prisma.user.update({
     where: { id },

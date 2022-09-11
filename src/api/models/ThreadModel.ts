@@ -1,3 +1,4 @@
+
 import {
 	validationThreadCreate,
 	validationThreadDelete,
@@ -10,22 +11,13 @@ import {
 import prisma from "../../../prisma";
 import { validationThread } from "../validations/ThreadValidation";
 import { notificationCreate } from "./NotificationModel";
+import { allThreadQuery } from "../query/thread/ThreadAll";
 
 export const thread = async (skip: number) => {
 	if ((await validationThread(skip)) === -1) return "Posts is empty";
 
-	const thread = await prisma.thread.findMany({
-		skip,
-		take: 12,
-		orderBy: { createAt: "desc" },
-		include: {
-			author: { select: { displayName: true, username:true } },
-			_count: {
-				select: { commentThread: true, saveThread: true, likeThread: true },
-			},
-		},
-	});
-	return thread;
+	const threadsQueryAll = await allThreadQuery(skip)
+	return threadsQueryAll;
 };
 
 export const threadDetail = async (id: string, skip: number) => {
