@@ -19,7 +19,7 @@ export const thread = async (skip: number) => {
 		take: 12,
 		orderBy: { createAt: "desc" },
 		include: {
-			author: { select: { displayName: true } },
+			author: { select: { displayName: true, username:true } },
 			_count: {
 				select: { commentThread: true, saveThread: true, likeThread: true },
 			},
@@ -34,7 +34,7 @@ export const threadDetail = async (id: string, skip: number) => {
 	const thread = await prisma.thread.findFirst({
 		where: { id },
 		include: {
-			author: { select: { displayName: true } },
+			author: { select: { displayName: true, username:true } },
 			commentThread: {
 				select: {
 					description: true,
