@@ -11,10 +11,10 @@ export const allThreadQuery = async (skip: number) => {
 		skip,
 		take: 12,
 		orderBy: { [orderBy]: orderRandom },
-		where: {
-			NOT: {
-				id: "desc"
-			}
+	 where: {
+		 AND: {
+			 id: "desc"
+		 }
 		},
 		include: {
 			author: { select: { displayName: true, username:true } },
