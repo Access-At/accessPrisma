@@ -1,3 +1,4 @@
+import { ThreadAllBookmark, ThreadAllSaved } from './../query/thread/ThreadBookmark';
 import {
 	validationThreadCreate,
 	validationThreadDelete,
@@ -90,33 +91,25 @@ export const thisThreadLikes = async (threadId: string, userId: string) => {
 	return threadLike;
 };
 
+/**
+ * If the validation function returns -1, -2, or -3, return a string. If it returns -4, return the
+ * result of the ThreadAllBookmark function. Otherwise, return the result of the ThreadAllSaved
+ * function.
+ * @param {string} threadId - string
+ * @param {string} userId - The user's id
+ * @returns a promise.
+ */
 export const threadSave = async (threadId: string, userId: string) => {
 	if ((await validationThreadSave(threadId, userId)) === -1) return "Can't be empty";
 	if ((await validationThreadSave(threadId, userId)) === -2) return "Can't find thread";
 	if ((await validationThreadSave(threadId, userId)) === -3) return "Can't find user";
 
 	if ((await validationThreadSave(threadId, userId)) === -4) {
-		const disSave = await prisma.saveThread.deleteMany({
-			where: {
-				AND: [
-					{
-						threadId,
-					},
-					{
-						userId,
-					},
-				],
-			},
-		});
-		return disSave;
+		const savedBookmark = await ThreadAllBookmark(threadId, userId)
+		return savedBookmark;
 	}
 
-	const threadSave = await prisma.saveThread.create({
-		data: {
-			threadId,
-			userId,
-		},
-	});
+	const threadSave = await ThreadAllSaved(threadId,userId)
 	return threadSave;
 };
 

@@ -4,6 +4,7 @@ CREATE TABLE `User` (
     `email` VARCHAR(191) NOT NULL,
     `username` VARCHAR(191) NOT NULL,
     `displayName` VARCHAR(120) NULL,
+    `location` VARCHAR(120) NULL DEFAULT '',
     `bio` TEXT NULL,
     `password` VARCHAR(255) NOT NULL,
     `createAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -154,6 +155,17 @@ CREATE TABLE `ViewShowcase` (
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+-- CreateTable
+CREATE TABLE `ImageShowcase` (
+    `id` VARCHAR(191) NOT NULL,
+    `createAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updateAt` DATETIME(3) NOT NULL,
+    `showcaseId` VARCHAR(191) NULL,
+    `userId` VARCHAR(191) NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 -- AddForeignKey
 ALTER TABLE `Notifications` ADD CONSTRAINT `Notifications_userNotif_fkey` FOREIGN KEY (`userNotif`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -219,3 +231,6 @@ ALTER TABLE `ViewShowcase` ADD CONSTRAINT `ViewShowcase_showcaseId_fkey` FOREIGN
 
 -- AddForeignKey
 ALTER TABLE `ViewShowcase` ADD CONSTRAINT `ViewShowcase_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `ImageShowcase` ADD CONSTRAINT `ImageShowcase_showcaseId_fkey` FOREIGN KEY (`showcaseId`) REFERENCES `ShowCase`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
