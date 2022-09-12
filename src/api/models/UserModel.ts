@@ -59,26 +59,30 @@ export const signOut = async (id: string) => {
 
 export const Myprofile = async (userId: string) => {
 	const user = await prisma.user.findFirstOrThrow({
-    where: {
-      id: userId
-    },
-    select: {
-      id: true,
-      username: true,
-      displayName: true,
-      bio: true,
-      location:true,
-      ShowCase: {
-        orderBy: {
-          createAt:"desc"
-        }
-      },
-      writeThread: {
-        orderBy: {
-          createAt:"desc"
-        }
-      },
-    },
+		where: {
+			id: userId,
+		},
+		select: {
+			id: true,
+			username: true,
+			displayName: true,
+			bio: true,
+			location: true,
+			email: true,
+			ShowCase: {
+				where: {
+					authorId: userId,
+				},
+				orderBy: {
+					createAt: "desc",
+				},
+			},
+			writeThread: {
+				orderBy: {
+					createAt: "desc",
+				},
+			},
+		},
 	});
 	return user;
 };
@@ -87,16 +91,16 @@ export const profile = async (username: string) => {
 	if ((await validationProfile(username)) === -1) return "Username can't be empty";
 	if ((await validationProfile(username)) === -2) return "Username not found";
 
-  const user = await prisma.user.findUnique({
-    where: { username },
-    select: {
-      id: true,
-      username: true,
-      displayName: true,
-      bio: true,
-      location:true
-    }
-  });
+	const user = await prisma.user.findUnique({
+		where: { username },
+		select: {
+			id: true,
+			username: true,
+			displayName: true,
+			bio: true,
+			location: true,
+		},
+	});
 	return user;
 };
 

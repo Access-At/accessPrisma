@@ -2,7 +2,7 @@ import prisma from "../../../prisma";
 import { validationThreadLike } from "../validations/ThreadValidation";
 
 export const notification = async (userId: string) => {
-	return await prisma.notifications.count({ where: { targetId: userId } });
+	return await prisma.notifications.count({ where: { targetId: userId, isView: false } });
 };
 
 export const notificationDetail = async (skip: number) => {
