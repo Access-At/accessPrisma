@@ -11,8 +11,8 @@ export const GetProfile = async (req: any, res: any, next: any) => {
 
 export const GetUpdate = async (req: any, res: any, next: any) => {
 	const userId = res.get("userId");
-	const { displayName, bio } = req.body;
-	const update = await profileUpdate(userId, displayName, bio);
+	const { displayName, bio, location } = req.body;
+	const update = await profileUpdate(userId, displayName, bio, location);
 
 	if (typeof update === "string") return Response400(res, update);
 	return Response200(res, profile);

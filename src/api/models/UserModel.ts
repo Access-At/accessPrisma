@@ -86,7 +86,8 @@ export const profile = async (username: string) => {
 export const profileUpdate = async (
   id: string,
   displayName: string,
-  bio: string
+  bio: string,
+  location: string,
 ) => {
   if ((await validationProfileUpdate(id)) === -1)
     return "userId can't be empty";
@@ -97,6 +98,7 @@ export const profileUpdate = async (
     data: {
       displayName,
       bio,
+      location,
     },
   });
   return userId;
