@@ -25,7 +25,7 @@ import { ThreadThisDisLike, ThreadThisLikes } from "../query/thread/ThreadThisLi
 
 export const getAllThread = async (skip: number) => {
 	if ((await validationThread(skip)) === -1) return "Posts is empty";
-	const getTreadsAll = await allThreadQuery(skip)
+	const getTreadsAll = await allThreadQuery(skip);
 	return getTreadsAll;
 };
 
@@ -38,7 +38,7 @@ export const getAllThread = async (skip: number) => {
 
 export const getTreadDetail = async (id: string, skip: number) => {
 	if ((await validationThreadDetail(id)) === -1) return "Thread is empty";
-	const getThreadDetails = await ThreadDetails(id, skip)
+	const getThreadDetails = await ThreadDetails(id, skip);
 	return getThreadDetails;
 };
 
@@ -50,7 +50,7 @@ export const getTreadDetail = async (id: string, skip: number) => {
  */
 export const getThreadDetailLike = async (id: string, skip: number) => {
 	if ((await validationThreadDetail(id)) === -1) return "Thread is empty";
-	const ThreadLike = await ThreadDetailLikes(id, skip)
+	const ThreadLike = await ThreadDetailLikes(id, skip);
 	return ThreadLike;
 };
 
@@ -64,7 +64,7 @@ export const getThreadDetailLike = async (id: string, skip: number) => {
 
 export const getThreadCreate = async (authorId: string, description: string) => {
 	if ((await validationThreadCreate(authorId, description)) === -1) return "Description can't be empty";
-	const threadCreate = await ThreadCreate(authorId, description)
+	const threadCreate = await ThreadCreate(authorId, description);
 	return threadCreate;
 };
 
@@ -82,11 +82,12 @@ export const thisThreadLikes = async (threadId: string, userId: string) => {
 	if ((await validationThreadLike(threadId, userId)) === -2) return "Can't find thread";
 	if ((await validationThreadLike(threadId, userId)) === -3) return "Can't find user";
 	if ((await validationThreadLike(threadId, userId)) === -4) {
-		const disLike = await ThreadThisDisLike(threadId,userId)
+		const disLike = await ThreadThisDisLike(threadId, userId);
 		return disLike;
 	}
-	const threadLike = await ThreadThisLikes(threadId,userId)
+
 	await notificationSend(userId, "", "", threadId, "Like");
+	const threadLike = await ThreadThisLikes(threadId, userId);
 
 	return threadLike;
 };

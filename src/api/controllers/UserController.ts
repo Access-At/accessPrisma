@@ -1,5 +1,13 @@
-import { profile, profileUpdate } from "../models/UserModel";
+import { profile, profileUpdate, Myprofile } from "../models/UserModel";
 import { Response200, Response400 } from "../helpers/Response";
+
+export const getMyProfile = async (req: any, res: any, next: any) => {
+	const userId = res.get("userId");
+	const profiles = await Myprofile(userId);
+
+	if (typeof profiles === "string") return Response400(res, profiles);
+	return Response200(res, profiles);
+};
 
 export const GetProfile = async (req: any, res: any, next: any) => {
 	const { username } = req.params;

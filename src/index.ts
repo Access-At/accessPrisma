@@ -13,7 +13,7 @@ import rateLimit from "./api/middlewares/rateLimit";
 import multers from "multer";
 
 import cors from "cors";
-const PORT = 3002;
+const PORT = process.env.PORT || 3002;
 
 const app = express();
 
