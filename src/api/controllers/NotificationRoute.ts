@@ -11,7 +11,6 @@ export const GetNotification = async (req: any, res: any) => {
 export const DetailNotification = async (req: any, res: any) => {
 	let { skip } = req.params;
 	if (skip) skip = parseInt(skip);
-	// if (!id) return Response404(res, "Not Found Thread");
 
 	const posts = await notificationDetail(skip);
 	if (typeof posts === "string") return Response400(res, posts);

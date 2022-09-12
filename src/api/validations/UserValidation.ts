@@ -21,6 +21,7 @@ export const validationSignup = async (username: string, email: string, password
     where: {
       OR: [{ username }, { email }],
     },
+
   })
 
   if (user) return -3

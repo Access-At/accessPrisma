@@ -16,6 +16,8 @@ import { ThreadDetails } from "../query/thread/ThreadDetails";
 import { ThreadDetailLikes } from "../query/thread/ThreadDetailLikes";
 import { ThreadCreate } from "../query/thread/ThreadCreate";
 import { ThreadThisDisLike, ThreadThisLikes } from "../query/thread/ThreadThisLikes";
+import { ThreadUserComment } from '../query/thread/ThreadComments';
+import { ThreadUpdated } from '../query/thread/ThreadUpdate';
 
 /**
  * It's a function that returns a promise that resolves to a string or an array of objects
@@ -25,8 +27,8 @@ import { ThreadThisDisLike, ThreadThisLikes } from "../query/thread/ThreadThisLi
 
 export const getAllThread = async (skip: number) => {
 	if ((await validationThread(skip)) === -1) return "Posts is empty";
-	const getTreadsAll = await allThreadQuery(skip);
-	return getTreadsAll;
+	return await allThreadQuery(skip);
+	// return getTreadsAll;
 };
 
 /**
@@ -119,14 +121,9 @@ export const threadUpdate = async (threadId: string, authorId: string, descripti
 		return "threadId, authorId, description can't be empty";
 	if ((await validationThreadUpdate(threadId, authorId, description)) === -2) return "threadId can't find";
 	if ((await validationThreadUpdate(threadId, authorId, description)) === -3) return "userId can't find";
-	const update = await prisma.thread.update({
-		where: { id: threadId },
-		data: {
-			description,
-		},
-	});
+	
+	return await ThreadUpdated(threadId, description)
 
-	return update;
 };
 
 export const threadDelete = async (threadId: string, authorId: string) => {
@@ -143,13 +140,7 @@ export const threadComment = async (threadId: string, userId: string, descriptio
 		return "threadId, authorId, description can't be empty";
 	if ((await validationThreadComment(threadId, userId, description)) === -2) return "threadId can't find";
 
-	const threadComment = await prisma.commentThread.create({
-		data: {
-			threadId,
-			userId,
-			description,
-		},
-	});
+	const threadComment = await ThreadUserComment(threadId, userId, description);
 
 	await notificationSend(userId, description, "", threadId, "Comment");
 
