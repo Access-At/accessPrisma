@@ -1,4 +1,4 @@
-import { ThreadAllBookmark, ThreadAllSaved } from './../query/thread/ThreadBookmark';
+import { ThreadAllBookmark, ThreadAllSaved } from "./../query/thread/ThreadBookmark";
 import {
 	validationThreadCreate,
 	validationThreadDelete,
@@ -16,8 +16,8 @@ import { ThreadDetails } from "../query/thread/ThreadDetails";
 import { ThreadDetailLikes } from "../query/thread/ThreadDetailLikes";
 import { ThreadCreate } from "../query/thread/ThreadCreate";
 import { ThreadThisDisLike, ThreadThisLikes } from "../query/thread/ThreadThisLikes";
-import { ThreadUserComment } from '../query/thread/ThreadComments';
-import { ThreadUpdated } from '../query/thread/ThreadUpdate';
+import { ThreadUserComment } from "../query/thread/ThreadComments";
+import { ThreadUpdated } from "../query/thread/ThreadUpdate";
 
 /**
  * It's a function that returns a promise that resolves to a string or an array of objects
@@ -108,11 +108,11 @@ export const threadSave = async (threadId: string, userId: string) => {
 	if ((await validationThreadSave(threadId, userId)) === -3) return "Can't find user";
 
 	if ((await validationThreadSave(threadId, userId)) === -4) {
-		const savedBookmark = await ThreadAllBookmark(threadId, userId)
+		const savedBookmark = await ThreadAllBookmark(threadId, userId);
 		return savedBookmark;
 	}
 
-	const threadSave = await ThreadAllSaved(threadId,userId)
+	const threadSave = await ThreadAllSaved(threadId, userId);
 	return threadSave;
 };
 
@@ -121,9 +121,8 @@ export const threadUpdate = async (threadId: string, authorId: string, descripti
 		return "threadId, authorId, description can't be empty";
 	if ((await validationThreadUpdate(threadId, authorId, description)) === -2) return "threadId can't find";
 	if ((await validationThreadUpdate(threadId, authorId, description)) === -3) return "userId can't find";
-	
-	return await ThreadUpdated(threadId, description)
 
+	return await ThreadUpdated(threadId, description);
 };
 
 export const threadDelete = async (threadId: string, authorId: string) => {
@@ -140,9 +139,8 @@ export const threadComment = async (threadId: string, userId: string, descriptio
 		return "threadId, authorId, description can't be empty";
 	if ((await validationThreadComment(threadId, userId, description)) === -2) return "threadId can't find";
 
-	const threadComment = await ThreadUserComment(threadId, userId, description);
-
 	await notificationSend(userId, description, "", threadId, "Comment");
+	const threadComment = await ThreadUserComment(threadId, userId, description);
 
 	return threadComment;
 };
