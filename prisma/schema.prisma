@@ -119,6 +119,7 @@ model ShowCase {
   title           String            @db.VarChar(255)
   description     String            @db.Text
   slug            String            @unique
+  link            String?
   createAt        DateTime          @default(now())
   updateAt        DateTime          @updatedAt
   authorShowCase  User?             @relation(fields: [authorId], references: [id])

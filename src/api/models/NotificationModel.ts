@@ -5,7 +5,7 @@ export const notification = async (userId: string) => {
 	return await prisma.notifications.count({ where: { targetId: userId, isView: false } });
 };
 
-export const notificationDetail = async (skip: number) => {
+export const notificationDetail = async (userId: string, skip: number) => {
 	const [notif, seeall] = await prisma.$transaction([
 		prisma.notifications.findMany({
 			skip,
@@ -20,6 +20,7 @@ export const notificationDetail = async (skip: number) => {
 				targetShow: { select: { id: true } },
 				description: true,
 			},
+			where: { targetId: userId },
 		}),
 		prisma.notifications.updateMany({
 			where: { isView: false },
