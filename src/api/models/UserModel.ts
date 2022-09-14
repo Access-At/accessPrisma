@@ -78,6 +78,9 @@ export const Myprofile = async (userId: string) => {
 				},
 			},
 			writeThread: {
+				where: {
+					authorId: userId,
+				},
 				orderBy: {
 					createAt: "desc",
 				},
