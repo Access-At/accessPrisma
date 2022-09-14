@@ -2,7 +2,15 @@ import prisma from "../../../prisma";
 import { validationThreadLike } from "../validations/ThreadValidation";
 
 export const notification = async (userId: string) => {
-	return await prisma.notifications.count({ where: { targetId: userId, isView: false } });
+	return await prisma.notifications.count({
+		where: {
+			NOT: {
+				userNotif: userId,
+			},
+			targetId: userId,
+			isView: false,
+		},
+	});
 };
 
 export const notificationDetail = async (userId: string, skip: number) => {
@@ -20,7 +28,12 @@ export const notificationDetail = async (userId: string, skip: number) => {
 				targetShow: { select: { id: true } },
 				description: true,
 			},
-			where: { targetId: userId },
+			where: {
+				NOT: {
+					userNotif: userId,
+				},
+				targetId: userId,
+			},
 		}),
 		prisma.notifications.updateMany({
 			where: { isView: false },

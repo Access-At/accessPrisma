@@ -9,6 +9,7 @@ import showcase from "./api/routes/ShowcaseRoute";
 import populer from "./api/routes/PopulerRoute";
 import circle from "./api/routes/CirclesRoute";
 import resizeImage from "./api/routes/Resize";
+import bookmark from "./api/routes/BookmarkRoute";
 import rateLimit from "./api/middlewares/rateLimit";
 import multers from "multer";
 
@@ -39,6 +40,7 @@ app.use("/api/v1", notification);
 app.use("/api/v1", showcase);
 app.use("/api/v1", populer);
 app.use("/api/v1", circle);
+app.use("/api/v1", bookmark);
 app.use("/api/vi", resizeImage);
 
 app.listen(PORT, () => console.log(`Rest Api run on http://localhost:${PORT}`));
