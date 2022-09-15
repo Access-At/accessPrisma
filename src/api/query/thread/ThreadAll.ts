@@ -20,6 +20,9 @@ export const allThreadQuery = async (skip: number) => {
 			likeThread: {
 				select: { userId: true },
 			},
+			saveThread: {
+				select: { userId: true },
+			},
 		},
 	});
 	return thread;
