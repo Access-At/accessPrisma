@@ -25,9 +25,9 @@ import { ThreadUpdated } from '../query/thread/ThreadUpdate';
  * @returns a promise.
  */
 
-export const getAllThread = async (skip: number) => {
+export const getAllThread = async (req:any, res:any,skip: number) => {
 	if ((await validationThread(skip)) === -1) return "Posts is empty";
-	return await allThreadQuery(skip);
+	return await allThreadQuery(req,res,skip);
 	// return getTreadsAll;
 };
 

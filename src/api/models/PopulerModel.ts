@@ -65,7 +65,7 @@ export const populer = async () => {
 		},
 		where: {
 			id: {
-			in: _showcaseViews.filter(({ _count }) => _count.viewShowcase < 50).map(x => x.id)
+			in: _showcaseViews.filter(({ _count }) => _count.viewShowcase < 20).map(x => x.id)
 		}	
 		}
 		

@@ -26,4 +26,8 @@ route.post("/thread/like", isAuthorized, LikeThread);
 route.post("/thread/comment", isAuthorized, CommentThread);
 route.post("/thread/save", isAuthorized, SaveThread);
 
+route.get("/thread/filter", (req: any, res: any) => {
+	console.log(req.params)
+})
+
 export default route;

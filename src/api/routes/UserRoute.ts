@@ -8,4 +8,5 @@ route.get("/user/profile/:username?", isAuthorized, GetProfile);
 route.get("/profile", isAuthorized, getMyProfile);
 route.put("/profile", isAuthorized, GetUpdate);
 
+
 export default route;

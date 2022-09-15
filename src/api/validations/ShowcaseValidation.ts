@@ -128,3 +128,4 @@ export const validationShowcaseComment = async (
   const showcase = await prisma.showCase.findFirst({ where: { id: showcaseId } });
   if (!showcase) return -2;
 };
+

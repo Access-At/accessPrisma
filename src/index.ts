@@ -11,6 +11,9 @@ import circle from "./api/routes/CirclesRoute";
 import resizeImage from "./api/routes/Resize";
 import rateLimit from "./api/middlewares/rateLimit";
 import multers from "multer";
+// import findHashtags from 'find-hashtags'
+// import {z} from 'zod'
+import hashtagRegex from 'hashtag-regex'
 
 import cors from "cors";
 const PORT = process.env.PORT || 3002;
@@ -23,6 +26,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(compression());
 app.use(cors());
+app.use(hashtagRegex)
 // app.use(multers());
 
 app.all("/", (req, res) => {
