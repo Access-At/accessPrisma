@@ -53,7 +53,7 @@ export const notificationSend = async (
 	threadId: any,
 	status: any
 ) => {
-	if ((await validationThreadLike(threadId, userId)) === -4) return;
+	if (status === "Like" && (await validationThreadLike(threadId, userId)) === -4) return;
 	// if ((await validationThreadLike(threadId, userId)) === -4) return; // check like showcase
 
 	const authorThread = await prisma.thread.findFirst({
