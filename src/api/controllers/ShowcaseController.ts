@@ -21,11 +21,11 @@ export const GetAllShowcase = async (req: any, res: any) => {
 };
 
 export const DetailShowcase = async (req: any, res: any) => {
-	let { id, skip } = req.params;
+	let { slug, skip } = req.params;
 	if (skip) skip = parseInt(skip);
-	if (!id) return Response404(res, "Not Found Showcase");
+	if (!slug) return Response404(res, "Not Found Showcase");
 
-	const posts = await showcaseDetail(id, skip);
+	const posts = await showcaseDetail(slug, skip);
 	if (typeof posts === "string") return Response400(res, posts);
 	return Response200(res, posts);
 };

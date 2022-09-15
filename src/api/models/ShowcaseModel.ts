@@ -33,14 +33,15 @@ export const showcase = async (skip: number) => {
 	return showcase;
 };
 
-export const showcaseDetail = async (id: string, skip: number) => {
-	if ((await validationShowcaseDetail(id)) === -1) return "Showcase is empty";
+export const showcaseDetail = async (slug: string, skip: number) => {
+	// if ((await validationShowcaseDetail(slug)) === -1) return "Showcase is empty";
 
-	const showcase = await prisma.showCase.findFirst({
-		where: { id },
+	const showcase = await prisma.showCase.findFirstOrThrow({
+		where: { slug },
 		include: {
 			authorShowCase: {
 				select: {
+					username:true,
 					displayName: true,
 				},
 			},

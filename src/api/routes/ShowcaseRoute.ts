@@ -16,7 +16,7 @@ const route = Router();
 
 route.post("/showcase/create", isAuthorized, CreateShowcase);
 route.get("/showcase/page/:skip?", isAuthorized, GetAllShowcase);
-route.get("/showcase/:id/:skip?", isAuthorized, DetailShowcase);
+route.get("/showcase/:slug/:skip?", isAuthorized, DetailShowcase);
 route.get("/showcase/:id/like/:skip?", isAuthorized, DetailShowcaseLike);
 
 route.put("/showcase/update", isAuthorized, UpdateShowcase);
