@@ -41,10 +41,10 @@ export const DetailShowcaseLike = async (req: any, res: any) => {
 };
 
 export const CreateShowcase = async (req: any, res: any) => {
-	const { title,description } = req.body;
+	const { title, description, link } = req.body;
 	const authorId = res.get("userId");
 
-	const showcases = await showcaseCreate(authorId,title ,description);
+	const showcases = await showcaseCreate(authorId, title, description, link);
 	if (typeof showcases === "string") return Response400(res, showcases);
 	return Response200(res, showcases);
 };
@@ -53,7 +53,7 @@ export const UpdateShowcase = async (req: any, res: any) => {
 	const { showcaseId, title, description } = req.body;
 	const authorId = res.get("userId");
 
-	const updateShowcase = await showcaseUpdate(showcaseId, authorId, title,description);
+	const updateShowcase = await showcaseUpdate(showcaseId, authorId, title, description);
 	if (typeof updateShowcase === "string") return Response400(res, updateShowcase);
 	return Response200(res, updateShowcase);
 };

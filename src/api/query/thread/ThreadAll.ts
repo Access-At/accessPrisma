@@ -10,6 +10,12 @@ export const allThreadQuery = async (res:any, req:any,skip: number) => {
 			_count: {
 				select: { commentThread: true, saveThread: true, likeThread: true },
 			},
+			likeThread: {
+				select: { userId: true },
+			},
+			saveThread: {
+				select: { userId: true },
+			},
 		},
 	});
 	return thread;

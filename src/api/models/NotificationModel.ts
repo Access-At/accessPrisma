@@ -2,10 +2,18 @@ import prisma from "../../../prisma";
 import { validationThreadLike } from "../validations/ThreadValidation";
 
 export const notification = async (userId: string) => {
-	return await prisma.notifications.count({ where: { targetId: userId } });
+	return await prisma.notifications.count({
+		where: {
+			NOT: {
+				userNotif: userId,
+			},
+			targetId: userId,
+			isView: false,
+		},
+	});
 };
 
-export const notificationDetail = async (skip: number) => {
+export const notificationDetail = async (userId: string, skip: number) => {
 	const [notif, seeall] = await prisma.$transaction([
 		prisma.notifications.findMany({
 			skip,
@@ -19,6 +27,12 @@ export const notificationDetail = async (skip: number) => {
 				targetThread: { select: { id: true } },
 				targetShow: { select: { id: true } },
 				description: true,
+			},
+			where: {
+				NOT: {
+					userNotif: userId,
+				},
+				targetId: userId,
 			},
 		}),
 		prisma.notifications.updateMany({
@@ -39,7 +53,7 @@ export const notificationSend = async (
 	threadId: any,
 	status: any
 ) => {
-	if ((await validationThreadLike(threadId, userId)) === -4) return;
+	if (status === "Like" && (await validationThreadLike(threadId, userId)) === -4) return;
 	// if ((await validationThreadLike(threadId, userId)) === -4) return; // check like showcase
 
 	const authorThread = await prisma.thread.findFirst({
