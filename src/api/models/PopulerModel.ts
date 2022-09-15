@@ -43,7 +43,8 @@ export const populer = async () => {
 	const _showcaseViews = await prisma.showCase.findMany({
 		take: 5,
 		select: {
-			id: true,
+			id:true,
+			// slug: true,
 			_count: {
 				select: {
 					viewShowcase:true
@@ -59,14 +60,16 @@ export const populer = async () => {
 	
 	const PopulerShowcase = await prisma.showCase.findMany({
 		select: {
-			id: true,
+			id:true,
+			slug: true,
 			title: true,
 			description: true
 		},
 		where: {
 			id: {
-			in: _showcaseViews.filter(({ _count }) => _count.viewShowcase < 20).map(x => x.id)
-		}	
+			notIn : _showcaseViews.filter(({_count}) => _count.viewShowcase < 1).map(x => x.id)
+			// in: _showcaseViews.filter(({ _count }) => _count.viewShowcase < 50).map(x => x.id)
+			}	
 		}
 		
 	})
