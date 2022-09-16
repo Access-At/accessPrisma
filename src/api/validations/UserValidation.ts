@@ -14,17 +14,16 @@ export const validationSignIn = async (username: string, password: string) => {
 
 export const validationSignup = async (username: string, email: string, password: string) => {
   if (!username || !password || !email) return -1
-
   if (!validator.isEmail(email)) return -2
+	if (!validator.isAlphanumeric(username)) return -3
 
   const user = await prisma.user.findFirst({
     where: {
       OR: [{ username }, { email }],
     },
-
   })
 
-  if (user) return -3
+  if (user) return -4
 }
 
 export const validationSignOut = async (id: string) => {
