@@ -14,7 +14,6 @@ model User {
   displayName     String?           @db.VarChar(120)
   location        String?           @db.VarChar(120)
   bio             String?           @db.Text
-  hashtag         String?           @db.Text
   password        String            @db.VarChar(255)
   createAt        DateTime          @default(now())
   updateAt        DateTime          @updatedAt
@@ -74,6 +73,7 @@ model Thread {
   saveThread    SaveThread[]
   viewThread    ViewThread[]
   Notifications Notifications[]
+  HashtagThread HashtagThread[]
 }
 
 model ViewThread {
@@ -113,6 +113,13 @@ model CommentThread {
   threadId    String?
   commentBy   User?    @relation("CommentThread", fields: [userId], references: [id])
   userId      String?
+}
+
+model HashtagThread {
+  id       String  @id @default(uuid())
+  hashtag  String? @db.Text
+  thread   Thread? @relation(fields: [threadId], references: [id])
+  threadId String?
 }
 
 model ShowCase {

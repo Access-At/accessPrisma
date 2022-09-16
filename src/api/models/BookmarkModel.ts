@@ -29,6 +29,7 @@ export const bookmarkGet = async (userId: string, skip: number) => {
 							title: true,
 							description: true,
 							createAt: true,
+							slug: true,
 						},
 					},
 				},

@@ -25,7 +25,9 @@ export const DetailShowcase = async (req: any, res: any) => {
 	if (skip) skip = parseInt(skip);
 	if (!slug) return Response404(res, "Not Found Showcase");
 
-	const posts = await showcaseDetail(slug, skip);
+	const userId = res.get("userId");
+
+	const posts = await showcaseDetail(slug, userId, skip);
 	if (typeof posts === "string") return Response400(res, posts);
 	return Response200(res, posts);
 };

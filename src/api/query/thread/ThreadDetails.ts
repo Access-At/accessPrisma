@@ -1,10 +1,10 @@
 import prisma from "../../../../prisma";
 
-export const ThreadDetails = async (id:string, skip: number) => {
- const thread = await prisma.thread.findFirst({
+export const ThreadDetails = async (id: string, skip: number) => {
+	const thread = await prisma.thread.findFirst({
 		where: { id },
 		include: {
-			author: { select: { displayName: true, username:true } },
+			author: { select: { displayName: true, username: true } },
 			commentThread: {
 				select: {
 					description: true,
@@ -19,5 +19,5 @@ export const ThreadDetails = async (id:string, skip: number) => {
 			},
 		},
 	});
-  return thread
-}
+	return thread;
+};

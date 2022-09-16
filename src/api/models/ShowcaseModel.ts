@@ -33,32 +33,60 @@ export const showcase = async (skip: number) => {
 	return showcase;
 };
 
-export const showcaseDetail = async (slug: string, skip: number) => {
-	// if ((await validationShowcaseDetail(slug)) === -1) return "Showcase is empty";
+export const showcaseDetail = async (slug: string, userId: string, skip: number) => {
+	if ((await validationShowcaseDetail(slug)) === -1) return "Showcase is empty";
 
-	const showcase = await prisma.showCase.findFirstOrThrow({
+	const showcaseId = await prisma.showCase.findFirst({
 		where: { slug },
-		include: {
-			authorShowCase: {
-				select: {
-					username:true,
-					displayName: true,
-				},
-			},
-			commentShowCase: {
-				select: {
-					description: true,
-					createAt: true,
-					commentBy: { select: { displayName: true, username: true } },
-				},
-				take: 15,
-				skip,
-			},
-			_count: {
-				select: { commentShowCase: true, saveShowCase: true, likeShowCase: true },
-			},
-		},
+		select: { id: true, authorId: true },
 	});
+
+	const [showcase, skipDuplicates] = await prisma.$transaction([
+		prisma.showCase.findFirstOrThrow({
+			where: { slug },
+			include: {
+				authorShowCase: {
+					select: {
+						username: true,
+						displayName: true,
+					},
+				},
+				commentShowCase: {
+					select: {
+						description: true,
+						createAt: true,
+						commentBy: { select: { displayName: true, username: true } },
+					},
+					take: 15,
+					skip,
+				},
+				_count: {
+					select: { commentShowCase: true, saveShowCase: true, likeShowCase: true },
+				},
+				likeShowCase: {
+					select: { userId: true },
+				},
+				saveShowCase: {
+					select: { userId: true },
+				},
+			},
+		}),
+		prisma.viewShowcase.findFirst({
+			where: {
+				AND: [{ userId }, { showcaseId: showcaseId?.id }],
+			},
+		}),
+	]);
+
+	if (!skipDuplicates) {
+		await prisma.viewShowcase.create({
+			data: {
+				userId,
+				showcaseId: showcaseId?.id,
+			},
+		});
+	}
+
 	return showcase;
 };
 
@@ -128,14 +156,14 @@ export const showcaseLikes = async (showCaseId: string, userId: string) => {
 		return disLike;
 	}
 
+	await notificationSend(userId, "", showCaseId, "", "Like");
+
 	const showcaseLike = await prisma.likeShowCase.create({
 		data: {
 			showCaseId,
 			userId,
 		},
 	});
-
-	await notificationSend(userId, "", showCaseId, "", "Like");
 
 	return showcaseLike;
 };
@@ -210,6 +238,8 @@ export const showcaseComment = async (showCaseId: string, userId: string, descri
 		return "threadId, authorId, description can't be empty";
 	if ((await validationShowcaseComment(showCaseId, userId, description)) === -2) return "showCaseId can't find";
 
+	await notificationSend(userId, description, showCaseId, "", "Comment");
+
 	const showcaseComment = await prisma.commentShowCase.create({
 		data: {
 			showCaseId,
@@ -217,8 +247,6 @@ export const showcaseComment = async (showCaseId: string, userId: string, descri
 			description,
 		},
 	});
-
-	await notificationSend(userId, description, showCaseId, "", "Comment");
 
 	return showcaseComment;
 };
