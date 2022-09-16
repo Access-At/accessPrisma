@@ -3,6 +3,7 @@ import { validationProfile, validationProfileUpdate, validationSignOut } from ".
 import prisma from "../../../prisma";
 import { validationSignIn, validationSignup } from "../validations/UserValidation";
 import bcrypt from "bcrypt";
+import validator from 'validator'
 
 export const signIn = async (username: string, password: string) => {
 	if ((await validationSignIn(username, password)) === -1) return "Username or password cannot be empty";
@@ -30,7 +31,8 @@ export const signUp = async (username: string, email: string, password: string) 
 
 	if ((await validationSignup(username, email, password)) === -2) return "Please input valid email";
 
-	if ((await validationSignup(username, email, password)) === -3) return "There is already a user using it";
+	if ((await validationSignup(username, email, password)) === -3) return "Invalid character with space";
+	if ((await validationSignup(username, email, password)) === -4) return "There is already a user using it";
 
 	const hash = await bcrypt.hash(password, 10);
 	const users = await prisma.user.create({
@@ -94,7 +96,7 @@ export const profile = async (username: string) => {
 	if ((await validationProfile(username)) === -1) return "Username can't be empty";
 	if ((await validationProfile(username)) === -2) return "Username not found";
 
-	const user = await prisma.user.findUnique({
+	const user = await prisma.user.findFirstOrThrow({
 		where: { username },
 		select: {
 			id: true,
@@ -102,6 +104,22 @@ export const profile = async (username: string) => {
 			displayName: true,
 			bio: true,
 			location: true,
+			ShowCase: {
+				where: {
+					authorId: username,
+				},
+				orderBy: {
+					createAt: "desc",
+				},
+			},
+			writeThread: {
+				where: {
+					authorId: username,
+				},
+				orderBy: {
+					createAt: "desc",
+				},
+			},
 		},
 	});
 	return user;
