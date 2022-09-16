@@ -13,6 +13,8 @@ model User {
   username        String            @unique
   displayName     String?           @db.VarChar(120)
   location        String?           @db.VarChar(120)
+  profileImage    String?           @db.VarChar(120)
+  bannerImage     String?           @db.VarChar(120)
   bio             String?           @db.Text
   password        String            @db.VarChar(255)
   createAt        DateTime          @default(now())

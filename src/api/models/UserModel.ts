@@ -139,3 +139,7 @@ export const profileUpdate = async (id: string, displayName: string, bio: string
 	});
 	return userId;
 };
+
+export const uploadProfileImage = async () => { }
+export const uploadBannerImage = async () => { }
+
