@@ -70,7 +70,9 @@ export const notificationSend = async (
 		});
 	} else {
 		author = await prisma.showCase.findFirst({
-			where: { id: showId },
+			where: {
+				id: showId,
+			},
 			select: {
 				authorShowCase: { select: { id: true } },
 			},

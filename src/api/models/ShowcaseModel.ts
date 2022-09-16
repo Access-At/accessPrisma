@@ -235,7 +235,7 @@ export const showcaseDelete = async (showCaseId: string, authorId: string) => {
 
 export const showcaseComment = async (showCaseId: string, userId: string, description: string) => {
 	if ((await validationShowcaseComment(showCaseId, userId, description)) === -1)
-		return "threadId, authorId, description can't be empty";
+		return "showCaseId, authorId, description can't be empty";
 	if ((await validationShowcaseComment(showCaseId, userId, description)) === -2) return "showCaseId can't find";
 
 	await notificationSend(userId, description, showCaseId, "", "Comment");

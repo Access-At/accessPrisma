@@ -1,7 +1,7 @@
 import prisma from "../../../prisma";
 
 export const bookmarkGet = async (userId: string, skip: number) => {
-	const bookmark = await prisma.user.findMany({
+	const bookmark = await prisma.user.findFirst({
 		where: { id: userId },
 		include: {
 			saveThread: {
