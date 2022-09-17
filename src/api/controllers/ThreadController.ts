@@ -13,9 +13,12 @@ import { Response200, Response204, Response400, Response404 } from "../helpers/R
 
 export const GetAllThread = async (req: any, res: any) => {
 	let { skip } = req.params;
-	if (skip) skip = parseInt(skip);
+	if (skip) {
+		skip = parseInt(skip);
+		skip = skip > 1 ? 12 * skip : 0;
+	}
 
-	const posts = await getAllThread(req,res,skip);
+	const posts = await getAllThread(req, res, skip);
 	if (typeof posts === "string") return Response400(res, posts);
 	return Response200(res, posts);
 };
