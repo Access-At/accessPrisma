@@ -69,6 +69,8 @@ export const Myprofile = async (userId: string) => {
 			username: true,
 			displayName: true,
 			bio: true,
+			profileImage: true,
+			bannerImage:true,
 			location: true,
 			email: true,
 			ShowCase: {
@@ -102,6 +104,8 @@ export const profile = async (username: string) => {
 			id: true,
 			username: true,
 			displayName: true,
+			profileImage: true,
+			bannerImage:true,
 			bio: true,
 			location: true,
 			ShowCase: {
