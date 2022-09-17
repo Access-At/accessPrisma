@@ -1,3 +1,4 @@
+import { changePassword } from './../models/UserModel';
 import { profile, profileUpdate, Myprofile } from "../models/UserModel";
 import { Response200, Response400 } from "../helpers/Response";
 
@@ -25,5 +26,13 @@ export const GetUpdate = async (req: any, res: any, next: any) => {
 	if (typeof update === "string") return Response400(res, update);
 	return Response200(res, profile);
 };
+
+export const getChangePassword = async (req: any, res: any, next: any) => {
+	const userId = res.get("userId")
+	const { password } = req.body
+	const updatePassword = await changePassword(userId, password) 
+	if (typeof updatePassword === "string") return Response400(res, updatePassword)
+	return Response200(res, updatePassword)
+}
 
 // export const getBannerImage = async (req: any, res: any, next: any) => {}

@@ -1,7 +1,7 @@
 import { validationProfile, validationProfileUpdate, validationSignOut } from "./../validations/UserValidation";
 
 import prisma from "../../../prisma";
-import { validationSignIn, validationSignup } from "../validations/UserValidation";
+import { validationSignIn, validationSignup, validationChangePassword } from "../validations/UserValidation";
 import bcrypt from "bcrypt";
 import validator from 'validator'
 
@@ -139,6 +139,24 @@ export const profileUpdate = async (id: string, displayName: string, bio: string
 	});
 	return userId;
 };
+
+export const changePassword =async (id:string, password:string) => {
+	if((await validationChangePassword(id)) === -1) return "UserId can't be empty"
+	if ((await validationChangePassword(id)) === -2) return "User not found"
+	
+	const hash = await bcrypt.hash(password, 10);
+	const userId = await prisma.user.update({
+		where: { id },
+		select: {
+			id: true, username: true, email:true, password:true
+		},
+		data: {
+			password:hash
+		}
+	})
+
+	return userId
+}
 
 export const uploadProfileImage = async () => { }
 export const uploadBannerImage = async () => { }
