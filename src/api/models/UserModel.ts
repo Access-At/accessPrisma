@@ -1,12 +1,15 @@
 import prisma from "../../../prisma";
-import { 
-	validationSignIn, validationSignup, 
-	validationChangePassword, 
+import {
+	validationSignIn,
+	validationSignup,
+	validationChangePassword,
 	validationChangeProfileImage,
 	validationProfile,
-	validationProfileUpdate, validationSignOut
+	validationProfileUpdate,
+	validationSignOut,
 } from "../validations/UserValidation";
 import bcrypt from "bcrypt";
+import fs from "fs";
 
 export const signIn = async (username: string, password: string) => {
 	if ((await validationSignIn(username, password)) === -1) return "Username or password cannot be empty";
@@ -73,7 +76,7 @@ export const Myprofile = async (userId: string) => {
 			displayName: true,
 			bio: true,
 			profileImage: true,
-			bannerImage:true,
+			bannerImage: true,
 			location: true,
 			email: true,
 			ShowCase: {
@@ -108,7 +111,7 @@ export const profile = async (username: string) => {
 			username: true,
 			displayName: true,
 			profileImage: true,
-			bannerImage:true,
+			bannerImage: true,
 			bio: true,
 			location: true,
 			ShowCase: {
@@ -147,35 +150,52 @@ export const profileUpdate = async (id: string, displayName: string, bio: string
 	return userId;
 };
 
-export const changePassword =async (id:string, password:string) => {
-	if((await validationChangePassword(id)) === -1) return "UserId can't be empty"
-	if ((await validationChangePassword(id)) === -2) return "User not found"
-	
+export const changePassword = async (id: string, password: string) => {
+	if ((await validationChangePassword(id)) === -1) return "UserId can't be empty";
+	if ((await validationChangePassword(id)) === -2) return "User not found";
+
 	const hash = await bcrypt.hash(password, 10);
 	const userId = await prisma.user.update({
 		where: { id },
 		select: {
-			id: true, username: true, email:true, password:true
+			id: true,
+			username: true,
+			email: true,
+			password: true,
 		},
 		data: {
-			password:hash
-		}
-	})
+			password: hash,
+		},
+	});
 
-	return userId
-}
+	return userId;
+};
 
-export const uploadProfileImage = async (id: string, profileImage: any, linked:any) => {	
-	if ((await validationChangeProfileImage(id)) === -1) return "UserId can't be empty"
+export const uploadProfileImage = async (id: string, profileImage: any, linked: any) => {
+	if ((await validationChangeProfileImage(id)) === -1) return "UserId can't be empty";
+
+	const deleteProfileImage = await prisma.user.findFirst({
+		where: { id },
+		select: {
+			profileImage: true,
+		},
+	});
+
+	if (deleteProfileImage?.profileImage) {
+		fs.unlinkSync(deleteProfileImage.profileImage);
+	}
+
 	const changeProfileImage = await prisma.user.update({
 		where: { id },
 		select: {
-			id:true, profileImage:true
+			id: true,
+			profileImage: true,
 		},
 		data: {
-			profileImage: `${linked}/${profileImage.path.replace("public\\", "").replace("\\","/")}`
-		}
-	})
-	
-	return changeProfileImage
-}
+			// profileImage: `${linked}/${profileImage.path.replace("public\\", "").replace("\\", "/")}`,
+			profileImage: `${profileImage.path.replace("public\\", "").replace("\\", "/")}`,
+		},
+	});
+
+	return changeProfileImage;
+};
