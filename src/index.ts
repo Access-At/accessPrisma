@@ -11,7 +11,9 @@ import circle from "./api/routes/CirclesRoute";
 import resizeImage from "./api/routes/Resize";
 import bookmark from "./api/routes/BookmarkRoute";
 import rateLimit from "./api/middlewares/rateLimit";
-// import multers from "multer";
+// import multer from "multer";
+import bodyParser from 'body-parser'
+// import path from "path";
 // import {z} from 'zod'
 // import hashtagRegex from 'hashtag-regex'
 
@@ -22,12 +24,15 @@ const app = express();
 
 // app.use(rateLimit);
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(compression());
 app.use(cors());
+app.use(express.static('public'));
 // app.use(hashtagRegex)
-// app.use(multers());
+// app.use(multer());
 
 app.all("/", (req, res) => {
 	res.json({
@@ -45,5 +50,7 @@ app.use("/api/v1", populer);
 app.use("/api/v1", circle);
 app.use("/api/v1", bookmark);
 app.use("/api/vi", resizeImage);
+
+
 
 app.listen(PORT, () => console.log(`Rest Api run on http://localhost:${PORT}`));

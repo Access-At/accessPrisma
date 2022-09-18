@@ -66,3 +66,13 @@ export const validationChangePassword = async (id:string) => {
   })
   if(!userId)return -2
 }
+export const validationChangeProfileImage = async (id:string) => {
+  if (!id) return -1
+  
+  const userId = await prisma.user.findFirst({
+    where: {
+      id
+    }
+  })
+  if(!userId)return -2
+}
