@@ -49,6 +49,7 @@
 		"find-hashtags": "^1.0.1",
 		"helmet": "^6.0.0",
 		"morgan": "^1.10.0",
+		"prisma-pagination": "^0.2.3",
 		"sharp": "^0.31.0",
 		"slugify": "^1.6.5",
 		"validator": "^13.7.0",

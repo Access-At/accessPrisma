@@ -15,8 +15,11 @@ export const GetAllThread = async (req: any, res: any) => {
 	let { skip } = req.params;
 	if (skip) {
 		skip = parseInt(skip);
-		skip = skip > 1 ? 12 * skip : 0;
 	}
+	// if (skip) {
+	// 	skip = parseInt(skip);
+	// 	skip = skip > 0 ? 12 * skip : 0;
+	// }
 
 	const posts = await getAllThread(req, res, skip);
 	if (typeof posts === "string") return Response400(res, posts);
