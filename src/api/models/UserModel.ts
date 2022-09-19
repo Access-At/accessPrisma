@@ -174,16 +174,18 @@ export const changePassword = async (id: string, password: string) => {
 export const uploadProfileImage = async (id: string, profileImage: any, linked: any) => {
 	if ((await validationChangeProfileImage(id)) === -1) return "UserId can't be empty";
 
-	const deleteProfileImage = await prisma.user.findFirst({
-		where: { id },
-		select: {
-			profileImage: true,
-		},
-	});
+	// const deleteProfileImage = await prisma.user.findFirst({
+	// 	where: { id },
+	// 	select: {
+	// 		profileImage: true,
+	// 	},
+	// });
 
-	if (deleteProfileImage?.profileImage) {
-		fs.unlinkSync(deleteProfileImage.profileImage);
-	}
+	// if (deleteProfileImage?.profileImage) {
+	// 	fs.unlinkSync(deleteProfileImage.profileImage);
+	// }
+
+	const urlImage = profileImage.path.replace(/\\/g, "/").replace("public/", "");
 
 	const changeProfileImage = await prisma.user.update({
 		where: { id },
@@ -192,8 +194,7 @@ export const uploadProfileImage = async (id: string, profileImage: any, linked: 
 			profileImage: true,
 		},
 		data: {
-			// profileImage: `${linked}/${profileImage.path.replace("public\\", "").replace("\\", "/")}`,
-			profileImage: `${profileImage.path.replace("public\\", "").replace("\\", "/")}`,
+			profileImage: `${linked}/${urlImage}`,
 		},
 	});
 

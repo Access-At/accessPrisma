@@ -8,6 +8,6 @@ route.get("/user/profile/:username?", isAuthorized, GetProfile);
 route.get("/profile", isAuthorized, getMyProfile);
 route.put("/profile", isAuthorized, GetUpdate);
 route.put("/profile/password", isAuthorized, getChangePassword);
-route.put("/profile/change/profile", upload.single("profileImage"), isAuthorized, getProfileImage);
+route.put("/profile/change/profile", isAuthorized, upload.single("profileImage"), getProfileImage);
 
 export default route;

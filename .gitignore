@@ -6,3 +6,4 @@ pnpm-lock.yaml
 *-lock.*
 yarn.lock
 prisma/migrations/*
+public/*
