@@ -181,8 +181,10 @@ export const uploadProfileImage = async (id: string, profileImage: any, linked: 
 		},
 	});
 
+
 	if (deleteProfileImage?.profileImage) {
-		fs.unlinkSync(deleteProfileImage.profileImage);
+		const profile = deleteProfileImage.profileImage.replace(`${linked}/public/profiles/`, "");
+		fs.unlinkSync(`public/profiles/${profile}`);
 	}
 
 	const changeProfileImage = await prisma.user.update({
@@ -192,8 +194,7 @@ export const uploadProfileImage = async (id: string, profileImage: any, linked: 
 			profileImage: true,
 		},
 		data: {
-			// profileImage: `${linked}/${profileImage.path.replace("public\\", "").replace("\\", "/")}`,
-			profileImage: `${profileImage.path.replace("public\\", "").replace("\\", "/")}`,
+			profileImage: `${linked}/${profileImage.path.replace("public\\", "").replace("\\", "/")}`,
 		},
 	});
 
