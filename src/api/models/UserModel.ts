@@ -3,7 +3,7 @@ import {
 	validationSignIn,
 	validationSignup,
 	validationChangePassword,
-	validationChangeProfileImage,
+	validationChangeImage,
 	validationProfile,
 	validationProfileUpdate,
 	validationSignOut,
@@ -172,7 +172,7 @@ export const changePassword = async (id: string, password: string) => {
 };
 
 export const uploadProfileImage = async (id: string, profileImage: any, linked: any) => {
-	if ((await validationChangeProfileImage(id)) === -1) return "UserId can't be empty";
+	if ((await validationChangeImage(id)) === -1) return "UserId can't be empty";
 
 	// const deleteProfileImage = await prisma.user.findFirst({
 	// 	where: { id },
@@ -185,7 +185,7 @@ export const uploadProfileImage = async (id: string, profileImage: any, linked: 
 	// 	fs.unlinkSync(deleteProfileImage.profileImage);
 	// }
 
-	const urlImage = profileImage.path.replace(/\\/g, "/").replace("public/", "");
+	const linkUrlImage = profileImage.path.replace(/\\/g, "/").replace("public/", "");
 
 	const changeProfileImage = await prisma.user.update({
 		where: { id },
@@ -194,9 +194,27 @@ export const uploadProfileImage = async (id: string, profileImage: any, linked: 
 			profileImage: true,
 		},
 		data: {
-			profileImage: `${linked}/${urlImage}`,
+			profileImage: `${linked}/${linkUrlImage}`,
 		},
 	});
 
 	return changeProfileImage;
+};
+export const uploadBannerImage = async (id: string, bannerImage: any, linked: any) => {
+	if ((await validationChangeImage(id)) === -1) return "UserId can't be empty";
+
+	const linkUrlImage = bannerImage.path.replace(/\\/g, "/").replace("public/", "");
+
+	const changeBannerImage = await prisma.user.update({
+		where: { id },
+		select: {
+			id: true,
+			bannerImage: true,
+		},
+		data: {
+			bannerImage: `${linked}/${linkUrlImage}`,
+		},
+	});
+
+	return changeBannerImage;
 };

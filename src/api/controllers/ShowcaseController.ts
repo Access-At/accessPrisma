@@ -45,8 +45,10 @@ export const DetailShowcaseLike = async (req: any, res: any) => {
 export const CreateShowcase = async (req: any, res: any) => {
 	const { title, description, link } = req.body;
 	const authorId = res.get("userId");
+	const image = req.file
+	const linked = `${req.protocol}://${req.get('host')}`
 
-	const showcases = await showcaseCreate(authorId, title, description, link);
+	const showcases = await showcaseCreate(authorId, title, description, image,link, linked);
 	if (typeof showcases === "string") return Response400(res, showcases);
 	return Response200(res, showcases);
 };

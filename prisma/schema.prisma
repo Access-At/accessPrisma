@@ -127,6 +127,7 @@ model HashtagThread {
 model ShowCase {
   id              String            @id @default(uuid())
   title           String            @db.VarChar(255)
+  image           String?           @db.VarChar(255)
   description     String            @db.Text
   slug            String            @unique
   link            String?

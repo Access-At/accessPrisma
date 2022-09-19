@@ -15,9 +15,10 @@ export const validationShowcaseDetail = async (slug: string) => {
 	if (!showcase) return -1;
 };
 
-export const validationShowcaseCreate = async (authorId: string, title: string, description: string) => {
+export const validationShowcaseCreate = async (authorId: string, title: string, description: string, image:any) => {
 	if (!authorId || !title) return -1;
 	if (!authorId || !description) return -2;
+	if (!authorId || !image) return -3;
 };
 
 export const validationShowcaseLike = async (showCaseId: string, userId: string) => {

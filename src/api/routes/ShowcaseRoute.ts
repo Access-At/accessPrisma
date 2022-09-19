@@ -11,10 +11,11 @@ import {
 	DetailShowcaseLike,
 } from "../controllers/ShowcaseController";
 import isAuthorized from "../middlewares/isAuthorized";
+import upload from "../middlewares/isUpload";
 
 const route = Router();
 
-route.post("/showcase/create", isAuthorized, CreateShowcase);
+route.post("/showcase/create", isAuthorized, upload.single("image"), CreateShowcase);
 route.get("/showcase/page/:skip?", isAuthorized, GetAllShowcase);
 route.get("/showcase/:slug/:skip?", isAuthorized, DetailShowcase);
 route.get("/showcase/:id/like/:skip?", isAuthorized, DetailShowcaseLike);

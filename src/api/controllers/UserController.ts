@@ -1,6 +1,6 @@
 // import  path  from 'path';
 // import multer from 'multer';
-import { changePassword, uploadProfileImage } from './../models/UserModel';
+import { changePassword, uploadBannerImage, uploadProfileImage } from './../models/UserModel';
 import { profile, profileUpdate, Myprofile } from "../models/UserModel";
 import { Response200, Response400 } from "../helpers/Response";
 
@@ -37,7 +37,7 @@ export const getChangePassword = async (req: any, res: any, next: any) => {
 	return Response200(res, updatePassword)
 }
 
-export const getProfileImage = async (req: any, res: any, next: any) => {
+export const getUpdateProfileImage = async (req: any, res: any, next: any) => {
 
 	const userId = res.get("userId")
 	const profileImage = req.file
@@ -45,4 +45,13 @@ export const getProfileImage = async (req: any, res: any, next: any) => {
 	const updateProfileImage = await uploadProfileImage(userId,profileImage, linked)
 	if (typeof updateProfileImage === "string") return Response400(res, updateProfileImage)
 	return Response200(res,updateProfileImage)
+}
+export const getUpdateBannerImage = async (req: any, res: any, next: any) => {
+
+	const userId = res.get("userId")
+	const bannerImage = req.file
+	const linked = `${req.protocol}://${req.get('host')}`
+	const updateBannerImage = await uploadBannerImage(userId,bannerImage, linked)
+	if (typeof updateBannerImage === "string") return Response400(res, updateBannerImage)
+	return Response200(res,updateBannerImage)
 }

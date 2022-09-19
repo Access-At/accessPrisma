@@ -9,6 +9,12 @@ const storage = multer.diskStorage({
 			case "/profile/change/profile":
 				whereFile = "profiles/";
 				break;
+			case "/profile/change/banner":
+				whereFile = "banner/";
+				break;
+			case "/showcase/create":
+				whereFile = "showcase/";
+				break;
 			default:
 				break;
 		}
@@ -23,6 +29,12 @@ const storage = multer.diskStorage({
 		switch (req.path) {
 			case "/profile/change/profile":
 				nameFile = "AVATAR";
+				break;
+			case "/profile/change/banner":
+				nameFile = "BANNER";
+				break;
+			case "/showcase/create":
+				nameFile = "SHOWCASE";
 				break;
 			default:
 				break;
