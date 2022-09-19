@@ -13,10 +13,7 @@ import { Response200, Response204, Response400, Response404 } from "../helpers/R
 
 export const GetAllThread = async (req: any, res: any) => {
 	let { skip } = req.params;
-	if (skip) {
-		skip = parseInt(skip);
-		skip = skip > 1 ? 12 * skip : 0;
-	}
+	if (skip) skip = parseInt(skip);
 
 	const posts = await getAllThread(req, res, skip);
 	if (typeof posts === "string") return Response400(res, posts);
@@ -26,6 +23,7 @@ export const GetAllThread = async (req: any, res: any) => {
 export const DetailThread = async (req: any, res: any) => {
 	let { id, skip } = req.params;
 	if (skip) skip = parseInt(skip);
+
 	if (!id) return Response404(res, "Not Found Thread");
 	const posts = await getTreadDetail(id, skip);
 	if (typeof posts === "string") return Response400(res, posts);
