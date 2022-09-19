@@ -113,9 +113,11 @@ export const showcaseDetailLike = async (id: string, skip: number) => {
 	return showcase;
 };
 
-export const showcaseCreate = async (authorId: string, title: string, description: string, link: string) => {
-	if ((await validationShowcaseCreate(authorId, title, description)) === -1) return "Title can't be empty";
-	if ((await validationShowcaseCreate(authorId, title, description)) === -2) return "Description can't be empty";
+export const showcaseCreate = async (authorId: string, title: string, description: string, image: any, link: string, linked:any) => {
+	if ((await validationShowcaseCreate(authorId, title, description, image)) === -1) return "Title can't be empty";
+	if ((await validationShowcaseCreate(authorId, title, description, image)) === -2) return "Description can't be empty";
+
+	let images = image ? `${linked}${image.path.replace(/\\/g, "/").replace("public/", "")}` : null
 
 	const slug = slugify(title, {
 		replacement: "-",
@@ -130,6 +132,7 @@ export const showcaseCreate = async (authorId: string, title: string, descriptio
 			title,
 			slug,
 			description,
+			image : images,
 			link,
 		},
 	});
