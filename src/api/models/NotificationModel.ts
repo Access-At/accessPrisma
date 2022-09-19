@@ -55,7 +55,7 @@ export const notificationSend = async (
 	status: any
 ) => {
 	if (status === "Like" && threadId !== "" && (await validationThreadLike(threadId, userId)) === -4) return;
-	// if (status === "Like" && showId !== "" && (await validationShowcaseLike(showId, userId)) === -4) return;
+	if (status === "Like" && showId !== "" && (await validationShowcaseLike(showId, userId)) === -4) return;
 
 	let author: any = "";
 

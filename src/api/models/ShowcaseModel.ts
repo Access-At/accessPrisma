@@ -231,8 +231,11 @@ export const showcaseDelete = async (showCaseId: string, authorId: string) => {
 	if ((await validationShowcaseDelete(showCaseId, authorId)) === -1) return "showcaseId and authorId can't be empty";
 	if ((await validationShowcaseDelete(showCaseId, authorId)) === -2) return "showcaseId can't find";
 	if ((await validationShowcaseDelete(showCaseId, authorId)) === -3) return "userId can't find";
-
-	const deleted = await prisma.showCase.delete({ where: { id: showCaseId } });
+	const deleted = await prisma.showCase.delete({
+		where: {
+			id: showCaseId,
+		},
+	});
 	return deleted;
 };
 
