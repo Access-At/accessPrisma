@@ -114,8 +114,9 @@ export const showcaseDetailLike = async (id: string, skip: number) => {
 };
 
 export const showcaseCreate = async (authorId: string, title: string, description: string, image: any, link: string, linked:any) => {
-	if ((await validationShowcaseCreate(authorId, title, description, image)) === -1) return "Title can't be empty";
-	if ((await validationShowcaseCreate(authorId, title, description, image)) === -2) return "Description can't be empty";
+	if ((await validationShowcaseCreate(authorId, title, description, image, link)) === -1) return "Title can't be empty";
+	if ((await validationShowcaseCreate(authorId, title, description, image, link)) === -2) return "Description can't be empty";
+	if ((await validationShowcaseCreate(authorId, title, description, image, link)) === -3) return "Link can't be empty (empty ? #)";
 
 	let images = image ? `${linked}${image.path.replace(/\\/g, "/").replace("public/", "")}` : null
 
@@ -201,12 +202,13 @@ export const showcaseSave = async (showCaseId: string, userId: string) => {
 	return showcaseSave;
 };
 
-export const showcaseUpdate = async (showCaseId: string, authorId: string, title: string, description: string) => {
-	if ((await validationShowcaseUpdate(showCaseId, authorId, title, description)) === -1)
+export const showcaseUpdate = async (showCaseId: string, authorId: string, title: string, link:string,description: string, image:any, linked:any) => {
+	if ((await validationShowcaseUpdate(showCaseId, authorId, title, description, image,link)) === -1)
 		return "showCaseId, authorId, title,description can't be empty";
-	if ((await validationShowcaseUpdate(showCaseId, authorId, title, description)) === -2) return "showcaseId can't find";
-	if ((await validationShowcaseUpdate(showCaseId, authorId, title, description)) === -3) return "userId can't find";
+	if ((await validationShowcaseUpdate(showCaseId, authorId, title, description, image,link)) === -2) return "showcaseId can't find";
+	if ((await validationShowcaseUpdate(showCaseId, authorId, title, description, image,link)) === -3) return "userId can't find";
 
+	let images = image ? `${linked}${image.path.replace(/\\/g, "/").replace("public/", "")}` : null
 	const slugs = slugify(title, {
 		replacement: "-",
 		remove: undefined,
@@ -221,6 +223,8 @@ export const showcaseUpdate = async (showCaseId: string, authorId: string, title
 			title,
 			slug: slugs,
 			description,
+			image: images,
+			link
 		},
 	});
 

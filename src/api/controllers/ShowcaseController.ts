@@ -54,10 +54,11 @@ export const CreateShowcase = async (req: any, res: any) => {
 };
 
 export const UpdateShowcase = async (req: any, res: any) => {
-	const { showcaseId, title, description } = req.body;
+	const { showcaseId, title, description, link } = req.body;
 	const authorId = res.get("userId");
-
-	const updateShowcase = await showcaseUpdate(showcaseId, authorId, title, description);
+	const image = req.file
+	const linked = `${req.protocol}://${req.get('host')}`
+	const updateShowcase = await showcaseUpdate(showcaseId, authorId, title, description, image, link, linked);
 	if (typeof updateShowcase === "string") return Response400(res, updateShowcase);
 	return Response200(res, updateShowcase);
 };

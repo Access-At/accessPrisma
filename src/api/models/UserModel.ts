@@ -9,7 +9,6 @@ import {
 	validationSignOut,
 } from "../validations/UserValidation";
 import bcrypt from "bcrypt";
-import fs from "fs";
 
 export const signIn = async (username: string, password: string) => {
 	if ((await validationSignIn(username, password)) === -1) return "Username or password cannot be empty";
@@ -37,9 +36,11 @@ export const signUp = async (username: string, email: string, password: string) 
 
 	if ((await validationSignup(username, email, password)) === -2) return "Please input valid email";
 
-	if ((await validationSignup(username, email, password)) === -3) return "Invalid character with space";
+	if ((await validationSignup(username, email, password)) === -3) return "Invalid character with aplha dash";
 	if ((await validationSignup(username, email, password)) === -4) return "There is already a user using it";
 
+	if (password.length < 8) return "Password must greater then 8 character"
+	
 	const hash = await bcrypt.hash(password, 10);
 	const users = await prisma.user.create({
 		data: {
@@ -154,6 +155,7 @@ export const changePassword = async (id: string, password: string) => {
 	if ((await validationChangePassword(id)) === -1) return "UserId can't be empty";
 	if ((await validationChangePassword(id)) === -2) return "User not found";
 
+	if (password.length < 8) return "Password must greater then 8 character"
 	const hash = await bcrypt.hash(password, 10);
 	const userId = await prisma.user.update({
 		where: { id },

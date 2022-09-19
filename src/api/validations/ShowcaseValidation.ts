@@ -15,10 +15,11 @@ export const validationShowcaseDetail = async (slug: string) => {
 	if (!showcase) return -1;
 };
 
-export const validationShowcaseCreate = async (authorId: string, title: string, description: string, image:any) => {
+export const validationShowcaseCreate = async (authorId: string, title: string, description: string, image:any, link:string) => {
 	if (!authorId || !title) return -1;
 	if (!authorId || !description) return -2;
 	if (!authorId || !image) return -3;
+	if (!authorId || !link) return -4;
 };
 
 export const validationShowcaseLike = async (showCaseId: string, userId: string) => {
@@ -85,9 +86,11 @@ export const validationShowcaseUpdate = async (
 	showCaseId: string,
 	authorId: string,
 	title: string,
-	description: string
+	description: string,
+	link: string,
+	image:any
 ) => {
-	if (!showCaseId || !authorId || !title || !description) return -1;
+	if (!showCaseId || !authorId || !title || !description || !link || !image) return -1;
 
 	const showcase = await prisma.showCase.findFirst({ where: { id: showCaseId } });
 	if (!showcase) return -2;

@@ -11,11 +11,7 @@ import circle from "./api/routes/CirclesRoute";
 import resizeImage from "./api/routes/Resize";
 import bookmark from "./api/routes/BookmarkRoute";
 import rateLimit from "./api/middlewares/rateLimit";
-// import multer from "multer";
 import bodyParser from 'body-parser'
-// import path from "path";
-// import {z} from 'zod'
-// import hashtagRegex from 'hashtag-regex'
 
 import cors from "cors";
 const PORT = process.env.PORT || 3002;
@@ -24,16 +20,13 @@ const app = express();
 
 // app.use(rateLimit);
 app.use(express.urlencoded({ extended: true }));
-app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(compression());
 app.use(cors());
 app.use(express.static('public'));
-// app.use(hashtagRegex)
-// app.use(multer());
-
 app.all("/", (req, res) => {
 	res.json({
 		Status: 200,
