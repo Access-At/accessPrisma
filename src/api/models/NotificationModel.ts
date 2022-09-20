@@ -23,7 +23,7 @@ export const notificationDetail = async (userId: string, skip: number) => {
 			select: {
 				status: true,
 				notifBy: {
-					select: { displayName: true },
+					select: { displayName: true, profileImage:true, username:true },
 				},
 				targetThread: { select: { id: true } },
 				targetShow: { select: { id: true } },
