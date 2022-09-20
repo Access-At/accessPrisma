@@ -49,6 +49,7 @@ export const showcaseDetail = async (slug: string, userId: string, skip: number)
 					select: {
 						username: true,
 						displayName: true,
+						profileImage:true
 					},
 				},
 				commentShowCase: {
