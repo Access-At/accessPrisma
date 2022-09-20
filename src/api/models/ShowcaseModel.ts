@@ -55,7 +55,7 @@ export const showcaseDetail = async (slug: string, userId: string, skip: number)
 					select: {
 						description: true,
 						createAt: true,
-						commentBy: { select: { displayName: true, username: true } },
+						commentBy: { select: { displayName: true, username: true, profileImage:true } },
 					},
 					take: 15,
 					skip,
