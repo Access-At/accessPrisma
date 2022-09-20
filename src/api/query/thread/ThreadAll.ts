@@ -9,7 +9,7 @@ export const allThreadQuery = async (res: any, req: any, skip: number) => {
 		{
 			orderBy: { createAt: "desc" },
 			include: {
-				author: { select: { displayName: true, username: true } },
+				author: { select: { displayName: true, username: true , profileImage:true } },
 				_count: {
 					select: { commentThread: true, saveThread: true, likeThread: true },
 				},

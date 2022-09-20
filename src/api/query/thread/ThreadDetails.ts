@@ -7,7 +7,7 @@ export const ThreadDetails = async (id: string, skip: number) => {
 	const thread = await paginate(prisma.thread, {
 		where: { id },
 		include: {
-			author: { select: { displayName: true, username: true } },
+			author: { select: { displayName: true, username: true, profileImage:true } },
 			commentThread: {
 				select: {
 					description: true,

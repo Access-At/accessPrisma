@@ -11,7 +11,7 @@ export const bookmarkGet = async (userId: string, skip: number) => {
 				include: {
 					thread: {
 						select: {
-							author: { select: { displayName: true, username: true } },
+							author: { select: { displayName: true, username: true, profileImage:true } },
 							description: true,
 							createAt: true,
 						},
@@ -25,7 +25,7 @@ export const bookmarkGet = async (userId: string, skip: number) => {
 				include: {
 					showCase: {
 						select: {
-							authorShowCase: { select: { displayName: true, username: true } },
+							authorShowCase: { select: { displayName: true, username: true, profileImage:true } },
 							title: true,
 							description: true,
 							createAt: true,

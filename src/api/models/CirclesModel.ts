@@ -9,7 +9,8 @@ export const circles = async (userId: string, skip: number) => {
       id: true,
       displayName: true,
       username: true,
-      bio:true
+      bio: true,
+      profileImage:true
     },
     where: {
       NOT: {

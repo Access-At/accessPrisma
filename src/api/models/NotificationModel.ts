@@ -64,7 +64,7 @@ export const notificationSend = async (
 			where: { id: threadId },
 			select: {
 				author: {
-					select: { id: true },
+					select: { id: true, profileImage:true },
 				},
 			},
 		});
@@ -74,7 +74,7 @@ export const notificationSend = async (
 				id: showId,
 			},
 			select: {
-				authorShowCase: { select: { id: true } },
+				authorShowCase: { select: { id: true,profileImage:true } },
 			},
 		});
 	}

@@ -11,6 +11,7 @@ export const ThreadDetailLikes = async (id:string, skip: number) => {
 							bio: true,
 							username: true,
 							displayName: true,
+							profileImage:true
 						},
 					},
 				},
