@@ -14,23 +14,6 @@ const isAuthorized = async (req: any, res: any, next: any) => {
 	} catch (error) {
 		Response401(res, "Unauthorized");
 	}
-	// try {
-	// const headerAuth = req.headers.authorization;
-
-	// 	if (headerAuth) {
-	// const token = headerAuth.split(" ")[1];
-	// 		console.log(token);
-	// const user = await prisma.session.findFirst({ where: { token } });
-	// 		console.log(user);
-	// 		req.userId = user?.id;
-	// res.set("userId", user?.userId);
-	// next();
-	// 	} else {
-	// 		Response401(res, "Unauthorized");
-	// 	}
-	// } catch (error) {
-	// Response401(res, "Unauthorized");
-	// }
 };
 
 export default isAuthorized;
