@@ -19,6 +19,7 @@ export const validationShowcaseCreate = async (authorId: string, title: string, 
 	if (!authorId || !title) return -1;
 	if (!authorId || !description) return -2;
 	if (!authorId || !link) return -3;
+	if (!validator.isURL(link)) return -4
 };
 
 export const validationShowcaseLike = async (showCaseId: string, userId: string) => {

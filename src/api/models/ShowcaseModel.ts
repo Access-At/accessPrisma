@@ -119,6 +119,7 @@ export const showcaseCreate = async (authorId: string, title: string, descriptio
 	if ((await validationShowcaseCreate(authorId, title, description, image, link)) === -1) return "Title can't be empty";
 	if ((await validationShowcaseCreate(authorId, title, description, image, link)) === -2) return "Description can't be empty";
 	if ((await validationShowcaseCreate(authorId, title, description, image, link)) === -3) return "Link can't be empty (empty ? #)";
+	if ((await validationShowcaseCreate(authorId, title, description, image, link)) === -4) return "Input link valid!";
 
 	let images = image ? `${linked}/${image.path.replace(/\\/g, "/").replace("public/", "")}` : null
 
