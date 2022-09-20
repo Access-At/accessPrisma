@@ -22,7 +22,7 @@ export const showcase = async (skip: number) => {
 		include: {
 			authorShowCase: {
 				select: {
-					displayName: true,
+					displayName: true, username:true, profileImage:true
 				},
 			},
 			_count: {
@@ -102,6 +102,7 @@ export const showcaseDetailLike = async (id: string, skip: number) => {
 						select: {
 							username: true,
 							displayName: true,
+							profileImage:true
 						},
 					},
 				},
