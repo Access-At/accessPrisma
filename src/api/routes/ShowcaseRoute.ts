@@ -20,7 +20,7 @@ route.get("/showcase/page/:skip?", isAuthorized, GetAllShowcase);
 route.get("/showcase/:slug/:skip?", isAuthorized, DetailShowcase);
 route.get("/showcase/:id/like/:skip?", isAuthorized, DetailShowcaseLike);
 
-route.put("/showcase/update/:slug", isAuthorized, UpdateShowcase);
+route.put("/showcase/update", isAuthorized, upload.single("image"), UpdateShowcase);
 route.post("/showcase/delete", isAuthorized, DeleteShowcase);
 route.post("/showcase/like", isAuthorized, LikeShowcase);
 route.post("/showcase/comment", isAuthorized, CommentShowcase);

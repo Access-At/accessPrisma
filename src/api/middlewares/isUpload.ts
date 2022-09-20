@@ -1,5 +1,6 @@
 import multer from "multer";
 import path from "path";
+import fs from "fs";
 
 const storage = multer.diskStorage({
 	destination: function (req: any, file: any, cb: any) {
@@ -13,18 +14,22 @@ const storage = multer.diskStorage({
 				whereFile = "banner/";
 				break;
 			case "/showcase/create":
+			case "/showcase/update":
 				whereFile = "showcase/";
 				break;
 			default:
 				break;
 		}
 
-		cb(null, `public/${whereFile}`);
+		const fullpath = `public/${whereFile}`;
+    if (!fs.existsSync(fullpath)) fs.mkdirSync(fullpath);
+    cb(null, fullpath);
 	},
 
 	filename: function (req: any, file: any, cb: any) {
-		const paths = path.extname(file.originalname).substr(1);
+		const paths = "jpg"
 		let nameFile = "";
+		let id = req.headers['userid'] || req.headers['showcaseid']
 
 		switch (req.path) {
 			case "/profile/change/profile":
@@ -33,14 +38,15 @@ const storage = multer.diskStorage({
 			case "/profile/change/banner":
 				nameFile = "BANNER";
 				break;
-			case "/showcase/create":
+			case "/showcase/create": 
+			case "/showcase/update":
 				nameFile = "SHOWCASE";
 				break;
 			default:
 				break;
 		}
 
-		cb(null, `${nameFile}-${req.headers["userid"]}.${paths}`);
+		cb(null, `${nameFile}-${id}.${paths}`);
 	},
 });
 
@@ -53,4 +59,4 @@ const fileFilter = (req: any, file: any, cb: any) => {
 
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 
-export default upload;
+export default upload

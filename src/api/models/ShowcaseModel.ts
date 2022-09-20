@@ -118,7 +118,8 @@ export const showcaseCreate = async (authorId: string, title: string, descriptio
 	if ((await validationShowcaseCreate(authorId, title, description, image, link)) === -2) return "Description can't be empty";
 	if ((await validationShowcaseCreate(authorId, title, description, image, link)) === -3) return "Link can't be empty (empty ? #)";
 
-	let images = image ? `${linked}${image.path.replace(/\\/g, "/").replace("public/", "")}` : null
+	let images = image ? `${linked}/${image.path.replace(/\\/g, "/").replace("public/", "")}` : null
+
 
 	const slug = slugify(title, {
 		replacement: "-",
@@ -202,13 +203,13 @@ export const showcaseSave = async (showCaseId: string, userId: string) => {
 	return showcaseSave;
 };
 
-export const showcaseUpdate = async (showCaseId: string, authorId: string, title: string, link:string,description: string, image:any, linked:any) => {
+export const showcaseUpdate = async (showCaseId: string, authorId: string, title: string, description: string, image:any, link:string,linked:any) => {
 	if ((await validationShowcaseUpdate(showCaseId, authorId, title, description, image,link)) === -1)
 		return "showCaseId, authorId, title,description can't be empty";
 	if ((await validationShowcaseUpdate(showCaseId, authorId, title, description, image,link)) === -2) return "showcaseId can't find";
 	if ((await validationShowcaseUpdate(showCaseId, authorId, title, description, image,link)) === -3) return "userId can't find";
 
-	let images = image ? `${linked}${image.path.replace(/\\/g, "/").replace("public/", "")}` : null
+	let images = image ? `${linked}/${image.path.replace(/\\/g, "/").replace("public/", "")}` : null
 	const slugs = slugify(title, {
 		replacement: "-",
 		remove: undefined,
@@ -216,9 +217,18 @@ export const showcaseUpdate = async (showCaseId: string, authorId: string, title
 		strict: true,
 		trim: true,
 	});
+  
 
-	const update = await prisma.showCase.update({
-		where: { id: showCaseId },
+	const update = await prisma.showCase.updateMany({
+		where: { 
+			// id: showCaseId,
+			AND : [
+				{
+				id: showCaseId,
+				authorId
+				},
+			]
+		},
 		data: {
 			title,
 			slug: slugs,

@@ -8,7 +8,7 @@ route.get("/user/profile/:username?", isAuthorized, GetProfile);
 route.get("/profile", isAuthorized, getMyProfile);
 route.put("/profile", isAuthorized, GetUpdate);
 route.put("/profile/password", isAuthorized, getChangePassword);
-route.post("/profile/change/profile", isAuthorized, upload.single("profileImage"), getUpdateProfileImage);
-route.post("/profile/change/banner", isAuthorized, upload.single("bannerImage"), getUpdateBannerImage);
+route.put("/profile/change/profile", isAuthorized, upload.single("profileImage"), getUpdateProfileImage);
+route.put("/profile/change/banner", isAuthorized, upload.single("bannerImage"), getUpdateBannerImage);
 
 export default route;
