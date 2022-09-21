@@ -32,13 +32,14 @@ export const signIn = async (username: string, password: string) => {
 };
 
 export const signUp = async (username: string, email: string, password: string) => {
-	if ((await validationSignup(username, email, password)) === -1) return "Fields cannot be empty";
+	if ((await validationSignup(username, email, password)) === -1) return "field cannot be empty, must be filled";
 
-	if ((await validationSignup(username, email, password)) === -2) return "Please input valid email";
+	if ((await validationSignup(username, email, password)) === -2) return "Please enter the correct email";
 
-	if ((await validationSignup(username, email, password)) === -3) return "Invalid character with aplha dash";
+	if ((await validationSignup(username, email, password)) === -3) return "Use text characters without spaces";
 	if ((await validationSignup(username, email, password)) === -4) return "There is already a user using it";
 
+	if(username.length < 3 ) return "Must be more than 3 characters"
 	if (password.length < 8) return "Password must greater then 8 character"
 	
 	const hash = await bcrypt.hash(password, 10);
@@ -55,7 +56,7 @@ export const signUp = async (username: string, email: string, password: string) 
 };
 
 export const signOut = async (id: string) => {
-	if ((await validationSignOut(id)) === -1) return "Timeout account, please login";
+	if ((await validationSignOut(id)) === -1) return "Time is up, please login again";
 
 	const signout = await prisma.session.deleteMany({
 		where: {
