@@ -72,12 +72,18 @@ export const Myprofile = async (userId: string) => {
 		where: {
 			id: userId,
 		},
-		include: {
+		select: {
+			id: true,
+			username: true,
+			displayName: true,
+			bio: true,
+			profileImage: true,
+			bannerImage: true,
+			location: true,
+			email: true,
 			ShowCase: {
-				select: {
-				},
 				where: {
-					authorId :userId
+					authorId:userId
 				},
 				orderBy: {
 					createAt: "desc"
@@ -85,12 +91,12 @@ export const Myprofile = async (userId: string) => {
 			},
 			writeThread: {
 				where: {
-					authorId :userId
+					authorId: userId
 				},
 				orderBy: {
-					createAt: "desc"
+					createAt:"desc"
 				}
-			},
+			}
 		}
 	});
 	return user;
