@@ -18,6 +18,12 @@ export const ThreadDetails = async (id: string, skip: number) => {
 			_count: {
 				select: { commentThread: true, saveThread: true, likeThread: true },
 			},
+			likeThread: {
+					select: { userId: true },
+				},
+			saveThread: {
+					select: { userId: true },
+			},
 		},
 	});
 
