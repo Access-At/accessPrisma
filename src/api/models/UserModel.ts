@@ -39,9 +39,9 @@ export const signUp = async (username: string, email: string, password: string) 
 	if ((await validationSignup(username, email, password)) === -3) return "Use text characters without spaces";
 	if ((await validationSignup(username, email, password)) === -4) return "There is already a user using it";
 
-	if(username.length < 3 ) return "Username must be more than 3 characters"
-	if (password.length < 8) return "Password must greater then 8 character"
-	
+	if (username.length < 3) return "Username must be more than 3 characters";
+	if (password.length < 8) return "Password must greater then 8 character";
+
 	const hash = await bcrypt.hash(password, 10);
 	const users = await prisma.user.create({
 		data: {
@@ -83,21 +83,21 @@ export const Myprofile = async (userId: string) => {
 			email: true,
 			ShowCase: {
 				where: {
-					authorId:userId
+					authorId: userId,
 				},
 				orderBy: {
-					createAt: "desc"
-				}
+					createAt: "desc",
+				},
 			},
 			writeThread: {
 				where: {
-					authorId: userId
+					authorId: userId,
 				},
 				orderBy: {
-					createAt:"desc"
-				}
-			}
-		}
+					createAt: "desc",
+				},
+			},
+		},
 	});
 	return user;
 };
@@ -105,6 +105,10 @@ export const Myprofile = async (userId: string) => {
 export const profile = async (username: string) => {
 	if ((await validationProfile(username)) === -1) return "Username can't be empty";
 	if ((await validationProfile(username)) === -2) return "Username not found";
+	const userId = await prisma.user.findFirst({
+		where: { username },
+		select: { id: true },
+	});
 
 	const user = await prisma.user.findFirstOrThrow({
 		where: { username },
@@ -118,7 +122,7 @@ export const profile = async (username: string) => {
 			location: true,
 			ShowCase: {
 				where: {
-					authorId: username,
+					authorId: userId?.id,
 				},
 				orderBy: {
 					createAt: "desc",
@@ -126,7 +130,7 @@ export const profile = async (username: string) => {
 			},
 			writeThread: {
 				where: {
-					authorId: username,
+					authorId: userId?.id,
 				},
 				orderBy: {
 					createAt: "desc",
@@ -156,7 +160,7 @@ export const changePassword = async (id: string, password: string) => {
 	if ((await validationChangePassword(id)) === -1) return "UserId can't be empty";
 	if ((await validationChangePassword(id)) === -2) return "User not found";
 
-	if (password.length < 8) return "Password must greater then 8 character"
+	if (password.length < 8) return "Password must greater then 8 character";
 	const hash = await bcrypt.hash(password, 10);
 	const userId = await prisma.user.update({
 		where: { id },
