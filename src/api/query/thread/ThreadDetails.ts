@@ -12,7 +12,7 @@ export const ThreadDetails = async (id: string, skip: number) => {
 				select: {
 					description: true,
 					createAt: true,
-					commentBy: { select: { displayName: true, username: true } },
+					commentBy: { select: { displayName: true, username: true,profileImage:true } },
 				},
 			},
 			_count: {
