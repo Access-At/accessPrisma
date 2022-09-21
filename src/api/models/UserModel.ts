@@ -68,7 +68,7 @@ export const signOut = async (id: string) => {
 };
 
 export const Myprofile = async (userId: string) => {
-	const user = await prisma.user.findFirstOrThrow({
+	const user = await prisma.user.findUniqueOrThrow({
 		where: {
 			id: userId,
 		},
@@ -81,23 +81,25 @@ export const Myprofile = async (userId: string) => {
 			bannerImage: true,
 			location: true,
 			email: true,
+		},
+		include: {
 			ShowCase: {
 				where: {
-					authorId: userId,
+					authorId :userId
 				},
 				orderBy: {
-					createAt: "desc",
-				},
+					createAt: "desc"
+				}
 			},
 			writeThread: {
 				where: {
-					authorId: userId,
+					authorId :userId
 				},
 				orderBy: {
-					createAt: "desc",
-				},
+					createAt: "desc"
+				}
 			},
-		},
+		}
 	});
 	return user;
 };
