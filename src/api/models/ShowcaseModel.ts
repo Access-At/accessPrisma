@@ -11,26 +11,46 @@ import {
 import prisma from "../../../prisma";
 import { notificationSend } from "./NotificationModel";
 import slugify from "slugify";
+import {createPaginator} from 'prisma-pagination'
 
 export const showcase = async (skip: number) => {
-	if ((await validationShowcase(skip)) === -1) return "Posts is empty";
+	if ((await validationShowcase(skip)) === -1) return "Showcase is empty";
+	const paginate = createPaginator({ perPage: 12 });
 
-	const showcase = await prisma.showCase.findMany({
-		skip,
-		take: 12,
-		orderBy: { createAt: "desc" },
-		include: {
-			authorShowCase: {
-				select: {
-					displayName: true, username:true, profileImage:true
+	const result = await paginate(
+		prisma.showCase,
+		{
+			orderBy: { createAt: "desc" },
+      include: {
+				authorShowCase: {
+					select: {
+						displayName: true, username:true, profileImage:true
+					},
+				},
+				_count: {
+					select: { commentShowCase: true, saveShowCase: true, likeShowCase: true },
 				},
 			},
-			_count: {
-				select: { commentShowCase: true, saveShowCase: true, likeShowCase: true },
-			},
 		},
-	});
-	return showcase;
+		{ page: skip }
+	);
+
+	// const showcase = await prisma.showCase.findMany({
+	// 	skip,
+	// 	take: 12,
+	// 	orderBy: { createAt: "desc" },
+	// 	include: {
+	// 		authorShowCase: {
+	// 			select: {
+	// 				displayName: true, username:true, profileImage:true
+	// 			},
+	// 		},
+	// 		_count: {
+	// 			select: { commentShowCase: true, saveShowCase: true, likeShowCase: true },
+	// 		},
+	// 	},
+	// });
+	return result;
 };
 
 export const showcaseDetail = async (slug: string, userId: string, skip: number) => {
