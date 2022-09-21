@@ -39,7 +39,7 @@ export const signUp = async (username: string, email: string, password: string) 
 	if ((await validationSignup(username, email, password)) === -3) return "Use text characters without spaces";
 	if ((await validationSignup(username, email, password)) === -4) return "There is already a user using it";
 
-	if(username.length < 3 ) return "Must be more than 3 characters"
+	if(username.length < 3 ) return "Username must be more than 3 characters"
 	if (password.length < 8) return "Password must greater then 8 character"
 	
 	const hash = await bcrypt.hash(password, 10);

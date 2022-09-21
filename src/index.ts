@@ -14,7 +14,8 @@ import rateLimit from "./api/middlewares/rateLimit";
 import bodyParser from 'body-parser'
 
 import cors from "cors";
-const PORT = process.env.PORT || 3002;
+// const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3200;
 
 const app = express();
 
