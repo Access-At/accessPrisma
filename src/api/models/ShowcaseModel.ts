@@ -11,7 +11,7 @@ import {
 import prisma from "../../../prisma";
 import { notificationSend } from "./NotificationModel";
 import slugify from "slugify";
-import {createPaginator} from 'prisma-pagination'
+import { createPaginator } from "prisma-pagination";
 
 export const showcase = async (skip: number) => {
 	if ((await validationShowcase(skip)) === -1) return "Showcase is empty";
@@ -21,10 +21,12 @@ export const showcase = async (skip: number) => {
 		prisma.showCase,
 		{
 			orderBy: { createAt: "desc" },
-      include: {
+			include: {
 				authorShowCase: {
 					select: {
-						displayName: true, username:true, profileImage:true
+						displayName: true,
+						username: true,
+						profileImage: true,
 					},
 				},
 				_count: {
@@ -56,30 +58,37 @@ export const showcase = async (skip: number) => {
 export const showcaseDetail = async (slug: string, userId: string, skip: number) => {
 	if ((await validationShowcaseDetail(slug)) === -1) return "Showcase is empty";
 
+	const paginate = createPaginator({ perPage: 12 });
+
 	const showcaseId = await prisma.showCase.findFirst({
 		where: { slug },
 		select: { id: true, authorId: true },
 	});
 
-	const [showcase, skipDuplicates] = await prisma.$transaction([
-		prisma.showCase.findFirstOrThrow({
+	const skipDuplicates = await prisma.viewShowcase.findFirst({
+		where: {
+			AND: [{ userId }, { showcaseId: showcaseId?.id }],
+		},
+	});
+
+	const showcase = await paginate(
+		prisma.showCase,
+		{
 			where: { slug },
 			include: {
 				authorShowCase: {
 					select: {
 						username: true,
 						displayName: true,
-						profileImage:true
+						profileImage: true,
 					},
 				},
 				commentShowCase: {
 					select: {
 						description: true,
 						createAt: true,
-						commentBy: { select: { displayName: true, username: true, profileImage:true } },
+						commentBy: { select: { displayName: true, username: true, profileImage: true } },
 					},
-					take: 15,
-					skip,
 				},
 				_count: {
 					select: { commentShowCase: true, saveShowCase: true, likeShowCase: true },
@@ -91,13 +100,11 @@ export const showcaseDetail = async (slug: string, userId: string, skip: number)
 					select: { userId: true },
 				},
 			},
-		}),
-		prisma.viewShowcase.findFirst({
-			where: {
-				AND: [{ userId }, { showcaseId: showcaseId?.id }],
-			},
-		}),
-	]);
+		},
+		{ page: skip }
+	);
+
+	// prisma.showCase.findFirstOrThrow();
 
 	if (!skipDuplicates) {
 		await prisma.viewShowcase.create({
@@ -123,7 +130,7 @@ export const showcaseDetailLike = async (id: string, skip: number) => {
 						select: {
 							username: true,
 							displayName: true,
-							profileImage:true
+							profileImage: true,
 						},
 					},
 				},
@@ -135,14 +142,22 @@ export const showcaseDetailLike = async (id: string, skip: number) => {
 	return showcase;
 };
 
-export const showcaseCreate = async (authorId: string, title: string, description: string, image: any, link: string, linked:any) => {
+export const showcaseCreate = async (
+	authorId: string,
+	title: string,
+	description: string,
+	image: any,
+	link: string,
+	linked: any
+) => {
 	if ((await validationShowcaseCreate(authorId, title, description, image, link)) === -1) return "Title can't be empty";
-	if ((await validationShowcaseCreate(authorId, title, description, image, link)) === -2) return "Description can't be empty";
-	if ((await validationShowcaseCreate(authorId, title, description, image, link)) === -3) return "Link can't be empty (empty ? #)";
+	if ((await validationShowcaseCreate(authorId, title, description, image, link)) === -2)
+		return "Description can't be empty";
+	if ((await validationShowcaseCreate(authorId, title, description, image, link)) === -3)
+		return "Link can't be empty (empty ? #)";
 	if ((await validationShowcaseCreate(authorId, title, description, image, link)) === -4) return "Input link valid!";
 
-	let images = image ? `${linked}/${image.path.replace(/\\/g, "/").replace("public/", "")}` : null
-
+	let images = image ? `${linked}/${image.path.replace(/\\/g, "/").replace("public/", "")}` : null;
 
 	const slug = slugify(title, {
 		replacement: "-",
@@ -157,7 +172,7 @@ export const showcaseCreate = async (authorId: string, title: string, descriptio
 			title,
 			slug,
 			description,
-			image : images,
+			image: images,
 			link,
 		},
 	});
@@ -226,13 +241,23 @@ export const showcaseSave = async (showCaseId: string, userId: string) => {
 	return showcaseSave;
 };
 
-export const showcaseUpdate = async (showCaseId: string, authorId: string, title: string, description: string, image:any, link:string,linked:any) => {
-	if ((await validationShowcaseUpdate(showCaseId, authorId, title, description, image,link)) === -1)
+export const showcaseUpdate = async (
+	showCaseId: string,
+	authorId: string,
+	title: string,
+	description: string,
+	image: any,
+	link: string,
+	linked: any
+) => {
+	if ((await validationShowcaseUpdate(showCaseId, authorId, title, description, image, link)) === -1)
 		return "showCaseId, authorId, title,description can't be empty";
-	if ((await validationShowcaseUpdate(showCaseId, authorId, title, description, image,link)) === -2) return "showcaseId can't find";
-	if ((await validationShowcaseUpdate(showCaseId, authorId, title, description, image,link)) === -3) return "userId can't find";
+	if ((await validationShowcaseUpdate(showCaseId, authorId, title, description, image, link)) === -2)
+		return "showcaseId can't find";
+	if ((await validationShowcaseUpdate(showCaseId, authorId, title, description, image, link)) === -3)
+		return "userId can't find";
 
-	let images = image ? `${linked}/${image.path.replace(/\\/g, "/").replace("public/", "")}` : null
+	let images = image ? `${linked}/${image.path.replace(/\\/g, "/").replace("public/", "")}` : null;
 	const slugs = slugify(title, {
 		replacement: "-",
 		remove: undefined,
@@ -240,24 +265,23 @@ export const showcaseUpdate = async (showCaseId: string, authorId: string, title
 		strict: true,
 		trim: true,
 	});
-  
 
 	const update = await prisma.showCase.updateMany({
-		where: { 
+		where: {
 			// id: showCaseId,
-			AND : [
+			AND: [
 				{
-				id: showCaseId,
-				authorId
+					id: showCaseId,
+					authorId,
 				},
-			]
+			],
 		},
 		data: {
 			title,
 			slug: slugs,
 			description,
 			image: images,
-			link
+			link,
 		},
 	});
 

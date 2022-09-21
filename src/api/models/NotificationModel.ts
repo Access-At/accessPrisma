@@ -1,6 +1,7 @@
 import prisma from "../../../prisma";
 import { validationThreadLike } from "../validations/ThreadValidation";
 import { validationShowcaseLike } from "../validations/ShowcaseValidation";
+import { createPaginator } from "prisma-pagination";
 
 export const notification = async (userId: string) => {
 	return await prisma.notifications.count({
@@ -15,18 +16,26 @@ export const notification = async (userId: string) => {
 };
 
 export const notificationDetail = async (userId: string, skip: number) => {
-	const [notif, seeall] = await prisma.$transaction([
-		prisma.notifications.findMany({
-			skip,
-			take: 15,
+	const paginate = createPaginator({ perPage: 12 });
+
+	await prisma.notifications.updateMany({
+		where: { isView: false },
+		data: {
+			isView: true,
+		},
+	});
+
+	const notif = await paginate(
+		prisma.notifications,
+		{
 			orderBy: { createAt: "desc" },
 			select: {
 				status: true,
 				notifBy: {
-					select: { displayName: true, profileImage:true, username:true },
+					select: { displayName: true, profileImage: true, username: true },
 				},
 				targetThread: { select: { id: true } },
-				targetShow: { select: { id: true } },
+				targetShow: { select: { slug: true } },
 				description: true,
 			},
 			where: {
@@ -35,14 +44,19 @@ export const notificationDetail = async (userId: string, skip: number) => {
 				},
 				targetId: userId,
 			},
-		}),
-		prisma.notifications.updateMany({
-			where: { isView: false },
-			data: {
-				isView: true,
-			},
-		}),
-	]);
+		},
+		{ page: skip }
+	);
+
+	// const [notif, seeall] = await prisma.$transaction([
+
+	// prisma.notifications.updateMany({
+	// 	where: { isView: false },
+	// 	data: {
+	// 		isView: true,
+	// 	},
+	// }),
+	// ]);
 
 	return notif;
 };
@@ -64,7 +78,7 @@ export const notificationSend = async (
 			where: { id: threadId },
 			select: {
 				author: {
-					select: { id: true, profileImage:true },
+					select: { id: true, profileImage: true },
 				},
 			},
 		});
@@ -74,7 +88,7 @@ export const notificationSend = async (
 				id: showId,
 			},
 			select: {
-				authorShowCase: { select: { id: true,profileImage:true } },
+				authorShowCase: { select: { id: true, profileImage: true } },
 			},
 		});
 	}

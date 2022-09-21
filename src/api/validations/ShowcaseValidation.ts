@@ -11,15 +11,21 @@ export const validationShowcase = async (skip: number) => {
 };
 
 export const validationShowcaseDetail = async (slug: string) => {
-	const showcase = await prisma.showCase.findFirstOrThrow({ where: { slug } });
+	const showcase = await prisma.showCase.findFirst({ where: { slug } });
 	if (!showcase) return -1;
 };
 
-export const validationShowcaseCreate = async (authorId: string, title: string, description: string, image:any, link:string) => {
+export const validationShowcaseCreate = async (
+	authorId: string,
+	title: string,
+	description: string,
+	image: any,
+	link: string
+) => {
 	if (!authorId || !title) return -1;
 	if (!authorId || !description) return -2;
 	if (!authorId || !link) return -3;
-	if (!validator.isURL(link)) return -4
+	if (!validator.isURL(link)) return -4;
 };
 
 export const validationShowcaseLike = async (showCaseId: string, userId: string) => {
@@ -88,7 +94,7 @@ export const validationShowcaseUpdate = async (
 	title: string,
 	description: string,
 	link: string,
-	image:any
+	image: any
 ) => {
 	if (!showCaseId || !authorId || !title || !description || !link || !image) return -1;
 
