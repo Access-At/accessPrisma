@@ -72,18 +72,10 @@ export const Myprofile = async (userId: string) => {
 		where: {
 			id: userId,
 		},
-		select: {
-			id: true,
-			username: true,
-			displayName: true,
-			bio: true,
-			profileImage: true,
-			bannerImage: true,
-			location: true,
-			email: true,
-		},
 		include: {
 			ShowCase: {
+				select: {
+				},
 				where: {
 					authorId :userId
 				},
