@@ -50,6 +50,7 @@ export const populer = async () => {
 				},
 			},
 		},
+		
 		orderBy: {
 			viewShowcase: {
 				_count: "desc",
@@ -62,7 +63,11 @@ export const populer = async () => {
 			id: true,
 			slug: true,
 			title: true,
-			description: true,
+			_count: {
+				select: {
+					viewShowcase:true
+				}
+			}
 		},
 		where: {
 			id: {
