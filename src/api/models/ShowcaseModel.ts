@@ -150,6 +150,7 @@ export const showcaseCreate = async (authorId: string, title: string, descriptio
 	if ((await validationShowcaseCreate(authorId, title, description, link)) === -4) return "Input link valid!";
 
 	// let images = image ? `${linked}/${image.path.replace(/\\/g, "/").replace("public/", "")}` : null;
+	if (title.length < 3) return "apa ge terserah respon nya";
 
 	const slug = slugify(title, {
 		replacement: "-",
