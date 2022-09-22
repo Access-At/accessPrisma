@@ -1,7 +1,6 @@
 import prisma from "../../../prisma";
 import { validationThreadLike } from "../validations/ThreadValidation";
 import { validationShowcaseLike } from "../validations/ShowcaseValidation";
-import { createPaginator } from "prisma-pagination";
 
 export const notification = async (userId: string) => {
 	return await prisma.notifications.count({
@@ -16,7 +15,6 @@ export const notification = async (userId: string) => {
 };
 
 export const notificationDetail = async (userId: string, skip: number) => {
-	const paginate = createPaginator({ perPage: 12 });
 
 	await prisma.notifications.updateMany({
 		where: { isView: false },
@@ -24,11 +22,8 @@ export const notificationDetail = async (userId: string, skip: number) => {
 			isView: true,
 		},
 	});
-
-	const notif = await paginate(
-		prisma.notifications,
-		{
-			orderBy: { createAt: "desc" },
+	const notification = await prisma.notifications.findMany({
+		orderBy: { createAt: "desc" },
 			select: {
 				status: true,
 				notifBy: {
@@ -44,9 +39,8 @@ export const notificationDetail = async (userId: string, skip: number) => {
 				},
 				targetId: userId,
 			},
-		},
-		{ page: skip }
-	);
+	}) 
+
 
 	// const [notif, seeall] = await prisma.$transaction([
 
@@ -58,7 +52,7 @@ export const notificationDetail = async (userId: string, skip: number) => {
 	// }),
 	// ]);
 
-	return notif;
+	return notification;
 };
 
 export const notificationSend = async (
