@@ -22,7 +22,7 @@ export const notificationDetail = async (userId: string, skip: number) => {
 			isView: true,
 		},
 	});
-	const notification = await prisma.notifications.findMany({
+	const notifications = await prisma.notifications.findMany({
 		orderBy: { createAt: "desc" },
 			select: {
 				status: true,
@@ -52,7 +52,7 @@ export const notificationDetail = async (userId: string, skip: number) => {
 	// }),
 	// ]);
 
-	return notification;
+	return notifications;
 };
 
 export const notificationSend = async (
