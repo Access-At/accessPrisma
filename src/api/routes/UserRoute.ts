@@ -1,5 +1,12 @@
 import { Router } from "express";
-import { GetProfile, GetUpdate, getMyProfile, getChangePassword, getUpdateProfileImage, getUpdateBannerImage } from "../controllers/UserController";
+import {
+	GetProfile,
+	GetUpdate,
+	getMyProfile,
+	getChangePassword,
+	getUpdateProfileImage,
+	getUpdateBannerImage,
+} from "../controllers/UserController";
 import isAuthorized from "../middlewares/isAuthorized";
 import upload from "../middlewares/isUpload";
 const route = Router();

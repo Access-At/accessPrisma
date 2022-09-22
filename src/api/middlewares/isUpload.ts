@@ -22,14 +22,14 @@ const storage = multer.diskStorage({
 		}
 
 		const fullpath = `public/${whereFile}`;
-    if (!fs.existsSync(fullpath)) fs.mkdirSync(fullpath);
-    cb(null, fullpath);
+		if (!fs.existsSync(fullpath)) fs.mkdirSync(fullpath);
+		cb(null, fullpath);
 	},
 
 	filename: function (req: any, file: any, cb: any) {
-		const paths = "jpg"
+		const paths = "jpg";
 		let nameFile = "";
-		let id = req.headers['userid'] || req.headers['showcaseid']
+		let id = req.headers["userid"] || req.headers["showcaseid"];
 
 		switch (req.path) {
 			case "/profile/change/profile":
@@ -38,7 +38,7 @@ const storage = multer.diskStorage({
 			case "/profile/change/banner":
 				nameFile = "BANNER";
 				break;
-			case "/showcase/create": 
+			case "/showcase/create":
 			case "/showcase/update":
 				nameFile = "SHOWCASE";
 				break;
@@ -59,4 +59,14 @@ const fileFilter = (req: any, file: any, cb: any) => {
 
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 
-export default upload
+export default upload;
+
+// export default = (req, res, next) => {
+//   return upload.single('file')(req, res, () => {
+//     // Remember, the middleware will call it's next function
+//     // so we can inject our controller manually as the next()
+
+//     if (!req.file) return res.json({ error: ErrorMessages.invalidFiletype })
+//     next()
+//   })
+// };

@@ -45,10 +45,10 @@ export const DetailShowcaseLike = async (req: any, res: any) => {
 export const CreateShowcase = async (req: any, res: any) => {
 	const { title, description, link } = req.body;
 	const authorId = res.get("userId");
-	const image = req.file
-	const linked = `${req.protocol}://${req.get('host')}`
+	// const image = req.file;
+	// const linked = `${req.protocol}://${req.get("host")}`;
 
-	const showcases = await showcaseCreate(authorId, title, description, image,link, linked);
+	const showcases = await showcaseCreate(authorId, title, description, link);
 	if (typeof showcases === "string") return Response400(res, showcases);
 	return Response200(res, showcases);
 };
@@ -56,10 +56,11 @@ export const CreateShowcase = async (req: any, res: any) => {
 export const UpdateShowcase = async (req: any, res: any) => {
 	const { showcaseId, title, description, link } = req.body;
 	const authorId = res.get("userId");
-	const image = req.file
-	const linked = `${req.protocol}://${req.get('host')}`
+	const image = req.file;
+	const linked = `${req.protocol}://${req.get("host")}`;
 	const updateShowcase = await showcaseUpdate(showcaseId, authorId, title, description, image, link, linked);
 	if (typeof updateShowcase === "string") return Response400(res, updateShowcase);
+	// if (error) return Response400(res, error);
 	return Response200(res, updateShowcase);
 };
 

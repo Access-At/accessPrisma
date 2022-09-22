@@ -142,37 +142,34 @@ export const showcaseDetailLike = async (id: string, skip: number) => {
 	return showcase;
 };
 
-export const showcaseCreate = async (
-	authorId: string,
-	title: string,
-	description: string,
-	image: any,
-	link: string,
-	linked: any
-) => {
-	if ((await validationShowcaseCreate(authorId, title, description, image, link)) === -1) return "Title can't be empty";
-	if ((await validationShowcaseCreate(authorId, title, description, image, link)) === -2)
-		return "Description can't be empty";
-	if ((await validationShowcaseCreate(authorId, title, description, image, link)) === -3)
+export const showcaseCreate = async (authorId: string, title: string, description: string, link: string) => {
+	if ((await validationShowcaseCreate(authorId, title, description, link)) === -1) return "Title can't be empty";
+	if ((await validationShowcaseCreate(authorId, title, description, link)) === -2) return "Description can't be empty";
+	if ((await validationShowcaseCreate(authorId, title, description, link)) === -3)
 		return "Link can't be empty (empty ? #)";
-	if ((await validationShowcaseCreate(authorId, title, description, image, link)) === -4) return "Input link valid!";
+	if ((await validationShowcaseCreate(authorId, title, description, link)) === -4) return "Input link valid!";
 
-	let images = image ? `${linked}/${image.path.replace(/\\/g, "/").replace("public/", "")}` : null;
+	// let images = image ? `${linked}/${image.path.replace(/\\/g, "/").replace("public/", "")}` : null;
 
 	const slug = slugify(title, {
 		replacement: "-",
-		remove: undefined,
 		lower: true,
 		strict: true,
 		trim: true,
 	});
+
+	const showcaseCheck = await prisma.showCase.findFirst({
+		where: { slug },
+	});
+
+	if (showcaseCheck) return "the title of the showcase is the same another showcase";
+
 	const showcaseCreate = await prisma.showCase.create({
 		data: {
 			authorId,
 			title,
 			slug,
 			description,
-			image: images,
 			link,
 		},
 	});
