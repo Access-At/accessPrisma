@@ -87,10 +87,9 @@ export const validationShowcaseUpdate = async (
 	authorId: string,
 	title: string,
 	description: string,
-	link: string,
-	image: any
+	link: string
 ) => {
-	if (!showCaseId || !authorId || !title || !description || !link || !image) return -1;
+	if (!showCaseId || !authorId || !title || !description || !link) return -1;
 
 	const showcase = await prisma.showCase.findFirst({ where: { id: showCaseId } });
 	if (!showcase) return -2;

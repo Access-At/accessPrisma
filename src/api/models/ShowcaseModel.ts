@@ -244,18 +244,18 @@ export const showcaseUpdate = async (
 	authorId: string,
 	title: string,
 	description: string,
-	image: any,
+	imageData: any,
 	link: string,
 	linked: any
 ) => {
-	if ((await validationShowcaseUpdate(showCaseId, authorId, title, description, image, link)) === -1)
+	if ((await validationShowcaseUpdate(showCaseId, authorId, title, description, link)) === -1)
 		return "showCaseId, authorId, title,description can't be empty";
-	if ((await validationShowcaseUpdate(showCaseId, authorId, title, description, image, link)) === -2)
+	if ((await validationShowcaseUpdate(showCaseId, authorId, title, description, link)) === -2)
 		return "showcaseId can't find";
-	if ((await validationShowcaseUpdate(showCaseId, authorId, title, description, image, link)) === -3)
+	if ((await validationShowcaseUpdate(showCaseId, authorId, title, description, link)) === -3)
 		return "userId can't find";
 
-	let images = image ? `${linked}/${image.path.replace(/\\/g, "/").replace("public/", "")}` : null;
+	let images: any = imageData ? `${linked}/${imageData.path.replace(/\\/g, "/").replace("public/", "")}` : null;
 	const slugs = slugify(title, {
 		replacement: "-",
 		remove: undefined,
@@ -263,6 +263,15 @@ export const showcaseUpdate = async (
 		strict: true,
 		trim: true,
 	});
+
+	let data: any = {
+		title,
+		slug: slugs,
+		description,
+		link,
+	};
+
+	if (images) data = { ...data, image: images };
 
 	const update = await prisma.showCase.updateMany({
 		where: {
@@ -274,13 +283,7 @@ export const showcaseUpdate = async (
 				},
 			],
 		},
-		data: {
-			title,
-			slug: slugs,
-			description,
-			image: images,
-			link,
-		},
+		data,
 	});
 
 	return update;
