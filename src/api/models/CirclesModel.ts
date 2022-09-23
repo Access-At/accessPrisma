@@ -3,7 +3,7 @@ import { createPaginator } from "prisma-pagination";
 
 export const circles = async (userId: string, skip: number) => {
   
-  const paginate = createPaginator({ perPage: 12 });
+  const paginate = createPaginator({ perPage: 21 });
 
 	const result = await paginate(
 		prisma.user,
