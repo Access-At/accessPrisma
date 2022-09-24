@@ -112,15 +112,19 @@ export const showcaseDetailLike = async (slug: string) => {
 		where: { slug },
 	});
 
-	const showcase = await prisma.likeShowCase.findFirst({
-		where: { showCaseId: showcaseId?.id },
+	const showcase = await prisma.showCase.findFirst({
+		where: { slug },
 		select: {
-			likeBy: {
+			likeShowCase: {
 				select: {
-					displayName: true,
-					username: true,
-					bio: true,
-					profileImage: true,
+					likeBy: {
+						select: {
+							displayName: true,
+							username: true,
+							bio: true,
+							profileImage: true,
+						},
+					},
 				},
 			},
 		},
