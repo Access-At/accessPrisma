@@ -1,7 +1,7 @@
 import prisma from "../../../../prisma";
 
 export const ThreadDetailLikes = async (id: string) => {
-	const thread = await prisma.thread.findMany({
+	const thread = await prisma.thread.findFirst({
 		where: { id },
 		select: {
 			likeThread: {
