@@ -145,6 +145,7 @@ export const showcaseDetailComment = async (slug: string, skip: number) => {
 				description: true,
 				createAt: true,
 			},
+			orderBy: { createAt: "desc" },
 		},
 		{ page: skip }
 	);

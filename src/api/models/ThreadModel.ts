@@ -71,6 +71,7 @@ export const getThreadDetailComment = async (id: string, skip: string) => {
 				description: true,
 				createAt: true,
 			},
+			orderBy: { createAt: "desc" },
 		},
 		{ page: skip }
 	);
