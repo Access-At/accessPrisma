@@ -18,6 +18,9 @@ import { ThreadCreate } from "../query/thread/ThreadCreate";
 import { ThreadThisDisLike, ThreadThisLikes } from "../query/thread/ThreadThisLikes";
 import { ThreadUserComment } from "../query/thread/ThreadComments";
 import { ThreadUpdated } from "../query/thread/ThreadUpdate";
+import { createPaginator } from "prisma-pagination";
+
+const paginate = createPaginator({ perPage: 12 });
 
 /**
  * It's a function that returns a promise that resolves to a string or an array of objects
@@ -25,9 +28,9 @@ import { ThreadUpdated } from "../query/thread/ThreadUpdate";
  * @returns a promise.
  */
 
-export const getAllThread = async (req:any, res:any,skip: number) => {
+export const getAllThread = async (req: any, res: any, skip: number) => {
 	if ((await validationThread(skip)) === -1) return "Posts is empty";
-	return await allThreadQuery(req,res,skip);
+	return await allThreadQuery(req, res, skip);
 	// return getTreadsAll;
 };
 
@@ -38,9 +41,9 @@ export const getAllThread = async (req:any, res:any,skip: number) => {
  * @returns the result of the ThreadDetails function.
  */
 
-export const getTreadDetail = async (id: string, skip: number) => {
+export const getTreadDetail = async (id: string) => {
 	if ((await validationThreadDetail(id)) === -1) return "Thread is empty";
-	const getThreadDetails = await ThreadDetails(id, skip);
+	const getThreadDetails = await ThreadDetails(id);
 	return getThreadDetails;
 };
 
@@ -50,10 +53,29 @@ export const getTreadDetail = async (id: string, skip: number) => {
  * @param {number} skip - number
  * @returns The return value is the result of the function.
  */
-export const getThreadDetailLike = async (id: string, skip: number) => {
+export const getThreadDetailLike = async (id: string) => {
 	if ((await validationThreadDetail(id)) === -1) return "Thread is empty";
-	const ThreadLike = await ThreadDetailLikes(id, skip);
+	const ThreadLike = await ThreadDetailLikes(id);
 	return ThreadLike;
+};
+
+export const getThreadDetailComment = async (id: string, skip: string) => {
+	if ((await validationThreadDetail(id)) === -1) return "Thread is empty";
+
+	const ThreadComment = await paginate(
+		prisma.commentThread,
+		{
+			where: { threadId: id },
+			select: {
+				commentBy: { select: { displayName: true, username: true, profileImage: true } },
+				description: true,
+				createAt: true,
+			},
+		},
+		{ page: skip }
+	);
+
+	return ThreadComment;
 };
 
 /**

@@ -9,12 +9,9 @@ export const GetNotification = async (req: any, res: any) => {
 };
 
 export const DetailNotification = async (req: any, res: any) => {
-	let { skip } = req.params;
 	const userId = res.get("userId");
 
-	if (skip) skip = parseInt(skip);
-
-	const posts = await notificationDetail(userId, skip);
+	const posts = await notificationDetail(userId);
 	if (typeof posts === "string") return Response400(res, posts);
 	return Response200(res, posts);
 };

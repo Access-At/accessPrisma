@@ -14,16 +14,10 @@ export const notification = async (userId: string) => {
 	});
 };
 
-export const notificationDetail = async (userId: string, skip: number) => {
-
-	await prisma.notifications.updateMany({
-		where: { isView: false },
-		data: {
-			isView: true,
-		},
-	});
-	const notifications = await prisma.notifications.findMany({
-		orderBy: { createAt: "desc" },
+export const notificationDetail = async (userId: string) => {
+	const [notifications, isView] = await prisma.$transaction([
+		prisma.notifications.findMany({
+			orderBy: { createAt: "desc" },
 			select: {
 				status: true,
 				notifBy: {
@@ -39,18 +33,14 @@ export const notificationDetail = async (userId: string, skip: number) => {
 				},
 				targetId: userId,
 			},
-	}) 
-
-
-	// const [notif, seeall] = await prisma.$transaction([
-
-	// prisma.notifications.updateMany({
-	// 	where: { isView: false },
-	// 	data: {
-	// 		isView: true,
-	// 	},
-	// }),
-	// ]);
+		}),
+		prisma.notifications.updateMany({
+			where: { isView: false },
+			data: {
+				isView: true,
+			},
+		}),
+	]);
 
 	return notifications;
 };

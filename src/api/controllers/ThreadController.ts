@@ -8,6 +8,7 @@ import {
 	threadSave,
 	threadComment,
 	getThreadDetailLike,
+	getThreadDetailComment,
 } from "./../models/ThreadModel";
 import { Response200, Response204, Response400, Response404 } from "../helpers/Response";
 
@@ -21,21 +22,30 @@ export const GetAllThread = async (req: any, res: any) => {
 };
 
 export const DetailThread = async (req: any, res: any) => {
-	let { id, skip } = req.params;
-	if (skip) skip = parseInt(skip);
+	let { id } = req.params;
 
 	if (!id) return Response404(res, "Not Found Thread");
-	const posts = await getTreadDetail(id, skip);
+	const posts = await getTreadDetail(id);
 	if (typeof posts === "string") return Response400(res, posts);
 	return Response200(res, posts);
 };
 
 export const DetailThreadLike = async (req: any, res: any) => {
+	let { id } = req.params;
+	if (!id) return Response404(res, "Not Found Thread");
+
+	const posts = await getThreadDetailLike(id);
+	if (typeof posts === "string") return Response400(res, posts);
+	return Response200(res, posts);
+};
+
+export const DetailThreadComment = async (req: any, res: any) => {
 	let { id, skip } = req.params;
+
 	if (skip) skip = parseInt(skip);
 	if (!id) return Response404(res, "Not Found Thread");
 
-	const posts = await getThreadDetailLike(id, skip);
+	const posts = await getThreadDetailComment(id, skip);
 	if (typeof posts === "string") return Response400(res, posts);
 	return Response200(res, posts);
 };

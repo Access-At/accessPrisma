@@ -13,6 +13,8 @@ import { notificationSend } from "./NotificationModel";
 import slugify from "slugify";
 import { createPaginator } from "prisma-pagination";
 
+const paginate = createPaginator({ perPage: 12 });
+
 export const showcase = async (skip: number) => {
 	if ((await validationShowcase(skip)) === -1) return "Showcase is empty";
 	const paginate = createPaginator({ perPage: 12 });
@@ -55,10 +57,8 @@ export const showcase = async (skip: number) => {
 	return result;
 };
 
-export const showcaseDetail = async (slug: string, userId: string, skip: number) => {
+export const showcaseDetail = async (slug: string, userId: string) => {
 	if ((await validationShowcaseDetail(slug)) === -1) return "Showcase is empty";
-
-	const paginate = createPaginator({ perPage: 12 });
 
 	const showcaseId = await prisma.showCase.findFirst({
 		where: { slug },
@@ -71,40 +71,27 @@ export const showcaseDetail = async (slug: string, userId: string, skip: number)
 		},
 	});
 
-	const showcase = await paginate(
-		prisma.showCase,
-		{
-			where: { slug },
-			include: {
-				authorShowCase: {
-					select: {
-						username: true,
-						displayName: true,
-						profileImage: true,
-					},
-				},
-				commentShowCase: {
-					select: {
-						description: true,
-						createAt: true,
-						commentBy: { select: { displayName: true, username: true, profileImage: true } },
-					},
-				},
-				_count: {
-					select: { commentShowCase: true, saveShowCase: true, likeShowCase: true },
-				},
-				likeShowCase: {
-					select: { userId: true },
-				},
-				saveShowCase: {
-					select: { userId: true },
+	const showcase = await prisma.showCase.findFirst({
+		where: { slug },
+		include: {
+			authorShowCase: {
+				select: {
+					username: true,
+					displayName: true,
+					profileImage: true,
 				},
 			},
+			_count: {
+				select: { commentShowCase: true, saveShowCase: true, likeShowCase: true },
+			},
+			likeShowCase: {
+				select: { userId: true },
+			},
+			saveShowCase: {
+				select: { userId: true },
+			},
 		},
-		{ page: skip }
-	);
-
-	// prisma.showCase.findFirstOrThrow();
+	});
 
 	if (!skipDuplicates) {
 		await prisma.viewShowcase.create({
@@ -118,27 +105,50 @@ export const showcaseDetail = async (slug: string, userId: string, skip: number)
 	return showcase;
 };
 
-export const showcaseDetailLike = async (id: string, skip: number) => {
-	if ((await validationShowcaseDetail(id)) === -1) return "Showcase is empty";
+export const showcaseDetailLike = async (slug: string) => {
+	if ((await validationShowcaseDetail(slug)) === -1) return "Showcase is empty";
 
-	const showcase = await prisma.showCase.findFirst({
-		where: { id },
-		include: {
-			likeShowCase: {
+	const showcaseId = await prisma.showCase.findFirst({
+		where: { slug },
+	});
+
+	const showcase = await prisma.likeShowCase.findMany({
+		where: { showCaseId: showcaseId?.id },
+		select: {
+			likeBy: {
 				select: {
-					likeBy: {
-						select: {
-							username: true,
-							displayName: true,
-							profileImage: true,
-						},
-					},
+					displayName: true,
+					username: true,
+					bio: true,
+					profileImage: true,
 				},
-				take: 15,
-				skip,
 			},
 		},
 	});
+
+	return showcase;
+};
+
+export const showcaseDetailComment = async (slug: string, skip: number) => {
+	if ((await validationShowcaseDetail(slug)) === -1) return "Showcase is empty";
+
+	const showcaseId = await prisma.showCase.findFirst({
+		where: { slug },
+	});
+
+	const showcase = await paginate(
+		prisma.commentShowCase,
+		{
+			where: { showCaseId: showcaseId?.id },
+			select: {
+				commentBy: { select: { displayName: true, username: true, profileImage: true } },
+				description: true,
+				createAt: true,
+			},
+		},
+		{ page: skip }
+	);
+
 	return showcase;
 };
 

@@ -8,6 +8,7 @@ import {
 	showcaseSave,
 	showcaseComment,
 	showcaseDetailLike,
+	showcaseDetailComment,
 } from "./../models/ShowcaseModel";
 import { Response200, Response204, Response400, Response404 } from "../helpers/Response";
 
@@ -21,23 +22,33 @@ export const GetAllShowcase = async (req: any, res: any) => {
 };
 
 export const DetailShowcase = async (req: any, res: any) => {
-	let { slug, skip } = req.params;
-	if (skip) skip = parseInt(skip);
+	let { slug } = req.params;
+
 	if (!slug) return Response404(res, "Not Found Showcase");
 
 	const userId = res.get("userId");
 
-	const posts = await showcaseDetail(slug, userId, skip);
+	const posts = await showcaseDetail(slug, userId);
 	if (typeof posts === "string") return Response400(res, posts);
 	return Response200(res, posts);
 };
 
 export const DetailShowcaseLike = async (req: any, res: any) => {
-	let { id, skip } = req.params;
-	if (skip) skip = parseInt(skip);
-	if (!id) return Response404(res, "Not Found Showcase");
+	let { slug } = req.params;
+	if (!slug) return Response404(res, "Not Found Showcase");
 
-	const posts = await showcaseDetailLike(id, skip);
+	const posts = await showcaseDetailLike(slug);
+	if (typeof posts === "string") return Response400(res, posts);
+	return Response200(res, posts);
+};
+
+export const DetailShowcaseComment = async (req: any, res: any) => {
+	let { slug, skip } = req.params;
+	if (skip) skip = parseInt(skip);
+
+	if (!slug) return Response404(res, "Not Found Showcase");
+
+	const posts = await showcaseDetailComment(slug, skip);
 	if (typeof posts === "string") return Response400(res, posts);
 	return Response200(res, posts);
 };

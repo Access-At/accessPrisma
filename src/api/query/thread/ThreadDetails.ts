@@ -1,28 +1,18 @@
 import prisma from "../../../../prisma";
-import { createPaginator } from "prisma-pagination";
 
-export const ThreadDetails = async (id: string, skip: number) => {
-	const paginate = createPaginator({ perPage: 12 });
-
-	const thread = await paginate(prisma.thread, {
+export const ThreadDetails = async (id: string) => {
+	const thread = await prisma.thread.findFirst({
 		where: { id },
 		include: {
-			author: { select: { displayName: true, username: true, profileImage:true } },
-			commentThread: {
-				select: {
-					description: true,
-					createAt: true,
-					commentBy: { select: { displayName: true, username: true,profileImage:true } },
-				},
-			},
+			author: { select: { displayName: true, username: true, profileImage: true } },
 			_count: {
 				select: { commentThread: true, saveThread: true, likeThread: true },
 			},
 			likeThread: {
-					select: { userId: true },
-				},
+				select: { userId: true },
+			},
 			saveThread: {
-					select: { userId: true },
+				select: { userId: true },
 			},
 		},
 	});
