@@ -43,12 +43,12 @@ model Notifications {
   isView       Boolean     @default(false)
   createAt     DateTime    @default(now())
   updateAt     DateTime    @updatedAt
-  notifBy      User        @relation(fields: [userNotif], references: [id])
+  notifBy      User        @relation(fields: [userNotif], references: [id], onDelete: Cascade)
   userNotif    String
   targetId     String
-  targetThread Thread?     @relation(fields: [threadId], references: [id])
+  targetThread Thread?     @relation(fields: [threadId], references: [id], onDelete: Cascade)
   threadId     String?
-  targetShow   ShowCase?   @relation(fields: [showId], references: [id])
+  targetShow   ShowCase?   @relation(fields: [showId], references: [id], onDelete: Cascade)
   showId       String?
   status       NotifStatus
   description  String?
@@ -69,7 +69,7 @@ model Thread {
   createAt      DateTime        @default(now())
   updateAt      DateTime        @updatedAt
   authorId      String
-  author        User            @relation("WriterThread", fields: [authorId], references: [id])
+  author        User            @relation("WriterThread", fields: [authorId], references: [id], onDelete: Cascade)
   commentThread CommentThread[]
   likeThread    LikeThread[]
   saveThread    SaveThread[]
@@ -81,9 +81,9 @@ model Thread {
 model ViewThread {
   id       String  @id @default(uuid())
   threadId String?
-  thread   Thread? @relation(fields: [threadId], references: [id])
+  thread   Thread? @relation(fields: [threadId], references: [id], onDelete: Cascade)
   userId   String?
-  viewBy   User?   @relation(fields: [userId], references: [id])
+  viewBy   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model LikeThread {
@@ -92,8 +92,8 @@ model LikeThread {
   updateAt DateTime @updatedAt
   threadId String?
   userId   String?
-  thread   Thread?  @relation(fields: [threadId], references: [id])
-  likeBy   User?    @relation("LikeThread", fields: [userId], references: [id])
+  thread   Thread?  @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  likeBy   User?    @relation("LikeThread", fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model SaveThread {
@@ -102,8 +102,8 @@ model SaveThread {
   updateAt DateTime @updatedAt
   threadId String?
   userId   String?
-  thread   Thread?  @relation(fields: [threadId], references: [id])
-  saveBy   User?    @relation("SaveThread", fields: [userId], references: [id])
+  thread   Thread?  @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  saveBy   User?    @relation("SaveThread", fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model CommentThread {
@@ -111,16 +111,16 @@ model CommentThread {
   description String   @db.Text
   createAt    DateTime @default(now())
   updateAt    DateTime @updatedAt
-  thread      Thread?  @relation(fields: [threadId], references: [id])
+  thread      Thread?  @relation(fields: [threadId], references: [id], onDelete: Cascade)
   threadId    String?
-  commentBy   User?    @relation("CommentThread", fields: [userId], references: [id])
+  commentBy   User?    @relation("CommentThread", fields: [userId], references: [id], onDelete: Cascade)
   userId      String?
 }
 
 model HashtagThread {
   id       String  @id @default(uuid())
   hashtag  String? @db.Text
-  thread   Thread? @relation(fields: [threadId], references: [id])
+  thread   Thread? @relation(fields: [threadId], references: [id], onDelete: Cascade)
   threadId String?
 }
 
@@ -133,7 +133,7 @@ model ShowCase {
   link            String?
   createAt        DateTime          @default(now())
   updateAt        DateTime          @updatedAt
-  authorShowCase  User?             @relation(fields: [authorId], references: [id])
+  authorShowCase  User?             @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId        String?
   commentShowCase CommentShowCase[]
   likeShowCase    LikeShowCase[]
@@ -149,8 +149,8 @@ model LikeShowCase {
   updateAt   DateTime  @updatedAt
   showCaseId String?
   userId     String?
-  showCase   ShowCase? @relation(fields: [showCaseId], references: [id])
-  likeBy     User?     @relation(fields: [userId], references: [id])
+  showCase   ShowCase? @relation(fields: [showCaseId], references: [id], onDelete: Cascade)
+  likeBy     User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model SaveShowCase {
@@ -159,8 +159,8 @@ model SaveShowCase {
   updateAt   DateTime  @updatedAt
   showCaseId String?
   userId     String?
-  showCase   ShowCase? @relation(fields: [showCaseId], references: [id])
-  saveBy     User?     @relation(fields: [userId], references: [id])
+  showCase   ShowCase? @relation(fields: [showCaseId], references: [id], onDelete: Cascade)
+  saveBy     User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model CommentShowCase {
@@ -168,9 +168,9 @@ model CommentShowCase {
   description String    @db.Text
   createAt    DateTime  @default(now())
   updateAt    DateTime  @updatedAt
-  showCase    ShowCase? @relation(fields: [showCaseId], references: [id])
+  showCase    ShowCase? @relation(fields: [showCaseId], references: [id], onDelete: Cascade)
   showCaseId  String?
-  commentBy   User?     @relation(fields: [userId], references: [id])
+  commentBy   User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String?
 }
 
@@ -179,9 +179,9 @@ model ViewShowcase {
   createAt   DateTime  @default(now())
   updateAt   DateTime  @updatedAt
   showcaseId String?
-  showcase   ShowCase? @relation(fields: [showcaseId], references: [id])
+  showcase   ShowCase? @relation(fields: [showcaseId], references: [id], onDelete: Cascade)
   userId     String?
-  viewBy     User?     @relation(fields: [userId], references: [id])
+  viewBy     User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ImageShowcase {
@@ -189,6 +189,6 @@ model ImageShowcase {
   createAt   DateTime  @default(now())
   updateAt   DateTime  @updatedAt
   showcaseId String?
-  showcase   ShowCase? @relation(fields: [showcaseId], references: [id])
+  showcase   ShowCase? @relation(fields: [showcaseId], references: [id], onDelete: Cascade)
   userId     String?
 }
