@@ -26,6 +26,7 @@ export const notificationDetail = async (userId: string) => {
 				targetThread: { select: { id: true } },
 				targetShow: { select: { slug: true } },
 				description: true,
+				createAt: true,
 			},
 			where: {
 				NOT: {
