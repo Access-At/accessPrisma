@@ -179,8 +179,6 @@ export const changePassword = async (id: string, password: string) => {
 };
 
 export const uploadProfileImage = async (id: string, profileImage: any, linked: any) => {
-	console.log({ profileImage: profileImage, id: id, linked: linked });
-
 	if ((await validationChangeImage(id)) === -1) return "UserId can't be empty";
 
 	// const deleteProfileImage = await prisma.user.findFirst({

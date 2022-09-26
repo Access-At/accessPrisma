@@ -25,7 +25,6 @@ export const GetUpdate = async (req: any, res: any, next: any) => {
 	const { displayName, bio, location } = req.body;
 	const update = await profileUpdate(userId, displayName, bio, location);
 	if (typeof update === "string") return Response400(res, update);
-	// if (!req.file || !req.body) return Response400(res, "mencobalaksjdlkasjd");
 	return Response200(res, profile);
 };
 
@@ -41,13 +40,9 @@ export const getUpdateProfileImage = async (req: any, res: any, next: any) => {
 	const userId = res.get("userId");
 	const profileImage = req.file;
 	const linked = `${req.protocol}://${req.get("host")}`;
-	if (req.file === undefined) {
-		return Response400(res, "lalala");
-	} else {
-		const updateProfileImage = await uploadProfileImage(userId, profileImage, linked);
-		if (typeof updateProfileImage === "string") return Response400(res, updateProfileImage);
-		return Response200(res, updateProfileImage);
-	}
+	const updateProfileImage = await uploadProfileImage(userId, profileImage, linked);
+	if (typeof updateProfileImage === "string") return Response400(res, updateProfileImage);
+	return Response200(res, updateProfileImage);
 };
 export const getUpdateBannerImage = async (req: any, res: any, next: any) => {
 	const userId = res.get("userId");
