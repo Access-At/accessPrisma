@@ -1,14 +1,17 @@
 {
-	"name": "hello-prisma",
+	"name": "access-Api",
 	"version": "1.0.0",
 	"description": "",
 	"main": "index.js",
+	"engines": {
+		"node": "16.x"
+	},
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"reset": "prisma migrate reset",
 		"migrate": "prisma migrate dev --name AcccessForum",
 		"generate": "prisma generate",
-		"setup": "prisma migrate dev --create-only && prisma migrate dev --name AcccessForum && prisma migrate reset &&  prisma generate",
+		"setup": "prisma migrate reset &&  prisma generate",
 		"dev": "nodemon src/index.ts",
 		"seed": "prisma db seed",
 		"studio": "prisma studio"

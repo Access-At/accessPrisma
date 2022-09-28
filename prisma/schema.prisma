@@ -1,5 +1,5 @@
 datasource db {
-  provider = "mysql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
@@ -8,15 +8,15 @@ generator client {
 }
 
 model User {
-  id              String            @id @default(uuid())
+  id              String            @id @default(auto()) @map("_id") @db.ObjectId
   email           String            @unique
   username        String            @unique
-  displayName     String?           @db.VarChar(120)
-  location        String?           @db.VarChar(120)
-  profileImage    String?           @db.VarChar(120)
-  bannerImage     String?           @db.VarChar(120)
-  bio             String?           @db.Text
-  password        String            @db.VarChar(255)
+  displayName     String?           @db.String
+  location        String?           @db.String
+  profileImage    String?           @db.String
+  bannerImage     String?           @db.String
+  bio             String?           @db.String
+  password        String            @db.String
   createAt        DateTime          @default(now())
   updateAt        DateTime          @updatedAt
   session         Session[]         @relation("Login")
@@ -39,7 +39,7 @@ enum NotifStatus {
 }
 
 model Notifications {
-  id           String      @id @default(uuid())
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
   isView       Boolean     @default(false)
   createAt     DateTime    @default(now())
   updateAt     DateTime    @updatedAt
@@ -55,7 +55,7 @@ model Notifications {
 }
 
 model Session {
-  id       String   @id @default(uuid())
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
   token    String   @default(uuid())
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
@@ -64,8 +64,8 @@ model Session {
 }
 
 model Thread {
-  id            String          @id @default(uuid())
-  description   String          @db.Text
+  id            String          @id @default(auto()) @map("_id") @db.ObjectId
+  description   String          @db.String
   createAt      DateTime        @default(now())
   updateAt      DateTime        @updatedAt
   authorId      String
@@ -79,7 +79,7 @@ model Thread {
 }
 
 model ViewThread {
-  id       String  @id @default(uuid())
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
   threadId String?
   thread   Thread? @relation(fields: [threadId], references: [id], onDelete: Cascade)
   userId   String?
@@ -87,7 +87,7 @@ model ViewThread {
 }
 
 model LikeThread {
-  id       String   @id @default(uuid())
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
   threadId String?
@@ -97,7 +97,7 @@ model LikeThread {
 }
 
 model SaveThread {
-  id       String   @id @default(uuid())
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
   threadId String?
@@ -107,8 +107,8 @@ model SaveThread {
 }
 
 model CommentThread {
-  id          String   @id @default(uuid())
-  description String   @db.Text
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  description String   @db.String
   createAt    DateTime @default(now())
   updateAt    DateTime @updatedAt
   thread      Thread?  @relation(fields: [threadId], references: [id], onDelete: Cascade)
@@ -118,17 +118,17 @@ model CommentThread {
 }
 
 model HashtagThread {
-  id       String  @id @default(uuid())
-  hashtag  String? @db.Text
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  hashtag  String? @db.String
   thread   Thread? @relation(fields: [threadId], references: [id], onDelete: Cascade)
   threadId String?
 }
 
 model ShowCase {
-  id              String            @id @default(uuid())
-  title           String            @db.VarChar(255)
-  image           String?           @db.VarChar(255)
-  description     String            @db.Text
+  id              String            @id @default(auto()) @map("_id") @db.ObjectId
+  title           String            @db.String
+  image           String?           @db.String
+  description     String            @db.String
   slug            String            @unique
   link            String?
   createAt        DateTime          @default(now())
@@ -144,7 +144,7 @@ model ShowCase {
 }
 
 model LikeShowCase {
-  id         String    @id @default(uuid())
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
   createAt   DateTime  @default(now())
   updateAt   DateTime  @updatedAt
   showCaseId String?
@@ -154,7 +154,7 @@ model LikeShowCase {
 }
 
 model SaveShowCase {
-  id         String    @id @default(uuid())
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
   createAt   DateTime  @default(now())
   updateAt   DateTime  @updatedAt
   showCaseId String?
@@ -164,8 +164,8 @@ model SaveShowCase {
 }
 
 model CommentShowCase {
-  id          String    @id @default(uuid())
-  description String    @db.Text
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  description String    @db.String
   createAt    DateTime  @default(now())
   updateAt    DateTime  @updatedAt
   showCase    ShowCase? @relation(fields: [showCaseId], references: [id], onDelete: Cascade)
@@ -175,7 +175,7 @@ model CommentShowCase {
 }
 
 model ViewShowcase {
-  id         String    @id @default(uuid())
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
   createAt   DateTime  @default(now())
   updateAt   DateTime  @updatedAt
   showcaseId String?
@@ -185,7 +185,7 @@ model ViewShowcase {
 }
 
 model ImageShowcase {
-  id         String    @id @default(uuid())
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
   createAt   DateTime  @default(now())
   updateAt   DateTime  @updatedAt
   showcaseId String?
